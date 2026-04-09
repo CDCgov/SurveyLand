@@ -1,1 +1,213 @@
-# SurveyLand
+
+# SurveyLand: an R Shiny application to streamline the analysis and reporting of complex survey data
+
+An R Shiny application for streamlined analysis and reporting of complex
+survey data, developed by the Division of Research and Methodology at
+the National Center for Health Statistics (NCHS).
+
+SurveyLand provides a user-friendly, stepwise workflow for preparing
+survey data, specifying complex survey design features, generating
+tables and plots, and exporting presentation-ready outputs aligned with
+NCHS data presentation standards. Although the application can be used
+with a wide range of datasets, it’s designed to support the unique
+requirements of complex survey data analysis, including clustering,
+stratification, and weighting.
+
+The aim is to improve the efficiency, transparency, and reproducibility
+of survey data workflows, while making insights more accessible. It’s
+intended for users who:
+
+- work with complex survey data and need weighted or design-based
+  estimates,
+- want outputs aligned with NCHS data presentation standards,
+- need quick export to Word, Excel, or image formats,
+- want a guided interface for preparing and analyzing data.
+
+> This project is still in development. Features and documentation are
+> subject to change.
+
+## Table of Contents
+
+- [Features](#features)
+- [Workflow](#workflow)
+- [Getting Started](#getting-started)
+- [File Structure](#file-structure)
+- [Troubleshooting](#troubleshooting)
+- [Pilot Use](#pilot-use)
+- [Authors and Acknowledgements](#authors-and-acknowledgements)
+
+## Features
+
+### Data ingestion and preparation
+
+**Supported file formats**
+
+| Format                 | Extension(s)                       |
+|------------------------|------------------------------------|
+| Comma-separated values | `.csv`                             |
+| Excel                  | `.xlsx`                            |
+| SAS                    | `.sas7bdat`                        |
+| SPSS                   | `.sav`                             |
+| R data                 | `.RData`, `.rdata`, `.Rda`, `.rda` |
+
+Files up to 300 MB are supported.
+
+**Survey metadata** Enter metadata that auto-populates table titles,
+figure titles, and data source captions, including: data producer,
+survey name, survey round or cycle, field dates, and geographic area.
+
+**Data filtering** Filter on up to two variables before analysis. Users
+are warned not to pre-filter for subgroup analyses when using complex
+survey design features, as doing so can produce incorrect standard
+errors.
+
+**Survey design information** Specify cluster/PSU, strata, and weight
+variables, if applicable. The application checks for missing values in
+selected design variables and warns when inputs are incomplete.
+
+### Data analysis
+
+Three analysis types supported:
+
+| Type                          | Description                                                               |
+|-------------------------------|---------------------------------------------------------------------------|
+| **One-way** (single-variable) | Distribution for a single outcome variable                                |
+| **Two-way** (bi-variable)     | Cross-tabulation of an outcome variable by a covariate                    |
+| **Multivariable**             | Distributions across multiple variables sharing the same response options |
+
+### Tables
+
+- Generate tabulated, formatted, and rounded survey estimates for
+  one-way, two-way, and multivariable analyses as `flextable` objects
+- Optional suppression of low-precision estimates per NCHS data
+  presentation standards via the
+  [`surveytable`](https://cdcgov.github.io/surveytable/) package, which
+  implements the methods described in [Parker et
+  al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf)
+  and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368)
+- Export options: PNG image, Word document (`.docx`), Excel workbook
+  (`.xlsx`)
+
+### Plots
+
+- Generate bar charts for one-way, two-way, and multivariable analyses
+- Customization options:
+  - Value labels on bars
+  - Multiple `ggplot2` themes, and a custom NCHS-style theme
+  - Titles, subtitles, captions, axis labels, and legend labels
+  - Axis orientation (horizontal/vertical) and bar style (stacked or
+    side-by-side)
+- Export option: PNG image
+
+### Report generation
+
+- Render a formatted Word document report using Quarto
+- Add selected plots and survey metadata to the report for download
+
+## Workflow
+
+1.  Upload a supported data file
+2.  Enter survey metadata for titles and data source captions
+3.  Optionally filter the dataset
+4.  Specify survey design and weighting variables
+5.  Choose an analysis type
+6.  Generate tables and/or plots
+7.  Export outputs or add plots to a report
+8.  Render and download the report
+
+## Getting Started
+
+### Prerequisites
+
+**1. Install Quarto CLI**
+
+Report generation requires the [Quarto command-line
+tools](https://quarto.org/docs/get-started/). Download and install
+before running the application.
+
+**2. Install R packages**
+
+``` r
+install.packages(c(
+  "shiny", "shinyFeedback", "shinyjs", "haven", "tidyverse", "glue", "DT", 
+  "sjlabelled", "labelled", "survey", "srvyr", "flextable", "surveytable",
+  "ggplot2", "quarto", "officer", "readxl", "openxlsx"
+))
+```
+
+### Running the App
+
+If `app.R` is in your working directory, launch the application with:
+
+``` r
+shiny::runApp("app.R")
+```
+
+Alternatively, open `app.R` in RStudio and click **Run App**.
+
+Once launched, click the **User Guide** button in the app header for
+step-by-step instructions (requires `docs/user-guide.html`)
+
+## File Structure
+
+The files below are required for full functionality:
+
+    ├── app.R                 # Main Shiny application
+    ├── report.qmd            # Quarto template for Word report generation
+    ├── docs/
+    │   └── user-guide.html   # HTML user guide for the in-app modal 
+    └── README.md
+
+> Depending on your repository layout, `app.R` may be in a subfolder
+> such as `scripts/shiny/`.
+
+## Troubleshooting
+
+**Report generation fails or “Quarto command-line tools path not
+found”**  
+This error appears when attempting to generate a report without Quarto
+CLI installed. Download it from
+[quarto.org](https://quarto.org/docs/get-started/) and restart your R
+session. Also, check that `report.qmd` exists in the expected location.
+
+**Missing values warning on design variables**  
+The app checks for `NA` values in your cluster, strata, and weight
+variables. Use the filtering step to remove incomplete cases before
+creating the survey design object.
+
+**File upload fails**  
+Files must be under 300 MB and in a supported format (see [Supported
+file formats](#data-ingestion-and-preparation)). Very large files may
+take a moment to load.
+
+**Multivariable analysis warning: “variables do not have identical
+response options”** Selected variables for multivariable analysis are
+suggested to share the same response options. Check that the variables
+are consistent.
+
+**User Guide does not open** Check that `docs/user-guide.html` exists in
+the expected location.
+
+## Pilot Use
+
+SurveyLand was piloted using data from the NCHS [Research and
+Development Survey (RANDS)](https://www.cdc.gov/nchs/rands/index.html),
+a survey that employs a complex design incorporating both probability
+and non-probability samples.
+
+## Authors and Acknowledgements
+
+**Authors**
+
+- Kristen Cibelli Hibben, CDC/NCHS/DRM/CCQDER (kcibelli@cdc.gov)
+- Sarah Forrest, CDC/NCHS/DRM/OD (sforrest@cdc.gov)
+- Paul Scanlon (former CDC)
+- Zachary Smith (former CDC)
+
+**Organization:** CDC / NCHS / DRM
+
+**Acknowledgements**
+
+- CDC Data Science Upskilling (DSU) Program
+- Alex Strashny (author of
+  [`surveytable`](https://cdcgov.github.io/surveytable/))
