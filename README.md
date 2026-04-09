@@ -1,9 +1,10 @@
 
 # SurveyLand: an R Shiny application to streamline the analysis and reporting of complex survey data
 
-An R Shiny application for streamlined analysis and reporting of complex
-survey data, developed by the Division of Research and Methodology at
-the National Center for Health Statistics (NCHS).
+Developed by the Division of Research and Methodology at the National
+Center for Health Statistics (NCHS) to improve the efficiency,
+transparency, and reproducibility of survey data workflows, while making
+insights more accessible.
 
 SurveyLand provides a user-friendly, stepwise workflow for preparing
 survey data, specifying complex survey design features, generating
@@ -11,11 +12,7 @@ tables and plots, and exporting presentation-ready outputs aligned with
 NCHS data presentation standards. Although the application can be used
 with a wide range of datasets, it’s designed to support the unique
 requirements of complex survey data analysis, including clustering,
-stratification, and weighting.
-
-The aim is to improve the efficiency, transparency, and reproducibility
-of survey data workflows, while making insights more accessible. It’s
-intended for users who:
+stratification, and weighting. It’s intended for users who:
 
 - work with complex survey data and need weighted or design-based
   estimates,
@@ -25,16 +22,6 @@ intended for users who:
 
 > This project is still in development. Features and documentation are
 > subject to change.
-
-## Table of Contents
-
-- [Features](#features)
-- [Workflow](#workflow)
-- [Getting Started](#getting-started)
-- [File Structure](#file-structure)
-- [Troubleshooting](#troubleshooting)
-- [Pilot Use](#pilot-use)
-- [Authors and Acknowledgements](#authors-and-acknowledgements)
 
 ## Features
 
@@ -56,7 +43,7 @@ Files up to 300 MB are supported.
 figure titles, and data source captions, including: data producer,
 survey name, survey round or cycle, field dates, and geographic area.
 
-**Data filtering** Filter on up to two variables before analysis. Users
+**Data filtering** Filter by up to two variables before analysis. Users
 are warned not to pre-filter for subgroup analyses when using complex
 survey design features, as doing so can produce incorrect standard
 errors.
@@ -67,7 +54,7 @@ selected design variables and warns when inputs are incomplete.
 
 ### Data analysis
 
-Three analysis types supported:
+Three analysis types are supported:
 
 | Type                          | Description                                                               |
 |-------------------------------|---------------------------------------------------------------------------|
@@ -129,9 +116,12 @@ before running the application.
 
 ``` r
 install.packages(c(
-  "shiny", "shinyFeedback", "shinyjs", "haven", "tidyverse", "glue", "DT", 
-  "sjlabelled", "labelled", "survey", "srvyr", "flextable", "surveytable",
-  "ggplot2", "quarto", "officer", "readxl", "openxlsx"
+  "shiny", "shinyFeedback", "shinyjs",           # Shiny and UI utilities
+  "haven", "readxl",                             # Data import
+  "tidyverse", "glue", "sjlabelled", "labelled", # Data wrangling
+  "survey", "srvyr", "surveytable",              # Survey analysis
+  "DT", "flextable",                             # Tables and visualization
+  "quarto", "officer", "openxlsx"                # Export and reporting
 ))
 ```
 
@@ -145,8 +135,9 @@ shiny::runApp("app.R")
 
 Alternatively, open `app.R` in RStudio and click **Run App**.
 
-Once launched, click the **User Guide** button in the app header for
-step-by-step instructions (requires `docs/user-guide.html`)
+Once launched, click the **User Guide** button for step-by-step
+instructions. This requires that `docs/user-guide.html` exists in the
+expected location.
 
 ## File Structure
 
@@ -161,19 +152,25 @@ The files below are required for full functionality:
 > Depending on your repository layout, `app.R` may be in a subfolder
 > such as `scripts/shiny/`.
 
+## Pilot Use
+
+SurveyLand was piloted using data from the NCHS [Research and
+Development Survey (RANDS)](https://www.cdc.gov/nchs/rands/index.html),
+a survey that employs a complex design incorporating both probability
+and non-probability samples.
+
 ## Troubleshooting
 
-**Report generation fails or “Quarto command-line tools path not
-found”**  
-This error appears when attempting to generate a report without Quarto
-CLI installed. Download it from
-[quarto.org](https://quarto.org/docs/get-started/) and restart your R
-session. Also, check that `report.qmd` exists in the expected location.
+**Report generation fails**  
+Report generation fails if Quarto CLI has not been installed. Download
+it from [quarto.org](https://quarto.org/docs/get-started/) and restart
+your R session. Also, check that `report.qmd` exists in the expected
+location.
 
 **Missing values warning on design variables**  
-The app checks for `NA` values in your cluster, strata, and weight
-variables. Use the filtering step to remove incomplete cases before
-creating the survey design object.
+The application checks for `NA` values in your cluster, strata, and
+weight variables. Use the filtering step to remove incomplete cases
+before creating the survey design object.
 
 **File upload fails**  
 Files must be under 300 MB and in a supported format (see [Supported
@@ -181,19 +178,12 @@ file formats](#data-ingestion-and-preparation)). Very large files may
 take a moment to load.
 
 **Multivariable analysis warning: “variables do not have identical
-response options”** Selected variables for multivariable analysis are
-suggested to share the same response options. Check that the variables
-are consistent.
+response options”** Selected variables for multivariable analysis should
+share the same response options. Check that the variables are
+consistent.
 
 **User Guide does not open** Check that `docs/user-guide.html` exists in
 the expected location.
-
-## Pilot Use
-
-SurveyLand was piloted using data from the NCHS [Research and
-Development Survey (RANDS)](https://www.cdc.gov/nchs/rands/index.html),
-a survey that employs a complex design incorporating both probability
-and non-probability samples.
 
 ## Authors and Acknowledgements
 
