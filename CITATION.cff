@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: SurveyLand
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Kristen
+    family-names: Cibelli Hibben
+    affiliation: National Center for Health Statistics
+  - given-names: Sarah
+    family-names: Forrest
+    affiliation: National Center for Health Statistics
+  - given-names: Paul
+    family-names: Scanlon
+    affiliation: National Center for Health Statistics (former)
+  - given-names: Zachary
+    family-names: Smith
+    affiliation: National Center for Health Statistics (former)
+repository-code: 'https://github.com/CDCgov/SurveyLand'
+abstract: >-
+  An R Shiny application to streamline the analysis and
+  reporting of complex survey data
+license: Apache-2.0
