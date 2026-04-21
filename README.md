@@ -1,24 +1,23 @@
 
 # SurveyLand: an R Shiny application to streamline the analysis and reporting of complex survey data
 
-Developed by the Division of Research and Methodology at the National
-Center for Health Statistics (NCHS) to improve the efficiency,
-transparency, and reproducibility of survey data workflows, while making
-insights more accessible.
+*SurveyLand* is an R Shiny application developed by the Division of
+Research and Methodology at the National Center for Health Statistics
+(NCHS) to improve the efficiency, transparency, and reproducibility of
+survey data workflows, while making insights more accessible. It
+provides a user-friendly, stepwise workflow for preparing survey data,
+specifying complex survey design features, generating tables and plots,
+and exporting presentation-ready outputs aligned with NCHS data
+presentation standards.
 
-SurveyLand provides a user-friendly, stepwise workflow for preparing
-survey data, specifying complex survey design features, generating
-tables and plots, and exporting presentation-ready outputs aligned with
-NCHS data presentation standards. Although the application can be used
-with a wide range of datasets, it’s designed to support the unique
-requirements of complex survey data analysis, including clustering,
-stratification, and weighting. It’s intended for users who:
+Although *SurveyLand* can be used with a wide range of datasets, it’s
+designed to support the unique requirements of complex survey data
+analysis, including clustering, stratification, and weighting. It is
+intended for users who need design-based estimates and:
 
-- work with complex survey data and need weighted or design-based
-  estimates,
-- want outputs aligned with NCHS data presentation standards,
-- need quick export to Word, Excel, or image formats,
-- want a guided interface for preparing and analyzing data.
+- outputs aligned with NCHS data presentation standards
+- quick export to Word, Excel, or image formats
+- a guided interface for preparing and analyzing data
 
 > This project is still in development. Features and documentation are
 > subject to change.
@@ -29,13 +28,13 @@ stratification, and weighting. It’s intended for users who:
 
 **Supported file formats**
 
-| Format                 | Extension(s)                       |
-|------------------------|------------------------------------|
-| Comma-separated values | `.csv`                             |
-| Excel                  | `.xlsx`                            |
-| SAS                    | `.sas7bdat`                        |
-| SPSS                   | `.sav`                             |
-| R data                 | `.RData`, `.rdata`, `.Rda`, `.rda` |
+| Format                 | Extension(s)                                               |
+|------------------------|------------------------------------------------------------|
+| Comma-separated values | `.csv`                                                     |
+| Excel                  | `.xlsx`, `.xls`                                            |
+| SAS                    | `.sas7bdat`                                                |
+| SPSS                   | `.sav`                                                     |
+| R data                 | `.RData`, `.rdata`, `.Rda`, `.rda`, `.rds`, `.RDS`, `.Rds` |
 
 Files up to 300 MB are supported.
 
@@ -154,7 +153,7 @@ The files below are required for full functionality:
 
 ## Pilot Use
 
-SurveyLand was piloted using data from the NCHS [Research and
+*SurveyLand* was piloted using data from the NCHS [Research and
 Development Survey (RANDS)](https://www.cdc.gov/nchs/rands/index.html),
 a survey that employs a complex design incorporating both probability
 and non-probability samples.
@@ -201,3 +200,18 @@ the expected location.
 - CDC Data Science Upskilling (DSU) Program
 - Alex Strashny (author of
   [`surveytable`](https://cdcgov.github.io/surveytable/))
+
+## Citation
+
+If you use *SurveyLand* in your research, please include the following
+statement in the Methods section of your article or report:
+
+> Data analyses were performed using the R Shiny application
+> “SurveyLand.”
+
+Please cite this software as follows:
+
+> Cibelli Hibben K, Forrest S, Scanlon P, Smith Z (2026). *SurveyLand:
+> An R Shiny application to streamline the analysis and reporting of
+> complex survey data*. National Center for Health Statistics.
+> <https://github.com/CDCgov/SurveyLand>.
