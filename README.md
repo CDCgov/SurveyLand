@@ -71,8 +71,8 @@ Three analysis types are supported:
   implements the methods described in [Parker et
   al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf)
   and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368)
-- Export options: PNG image, Word document (`.docx`), Excel workbook
-  (`.xlsx`)
+- Export options: PNG image, Word document (.docx), Excel workbook
+  (.xlsx)
 
 ### Plots
 
@@ -149,7 +149,7 @@ The files below are required for full functionality:
     └── README.md
 
 > Depending on your repository layout, `app.R` may be in a subfolder
-> such as `scripts/shiny/`.
+> such as `shiny/`.
 
 ## Pilot Use
 
@@ -158,42 +158,14 @@ Development Survey (RANDS)](https://www.cdc.gov/nchs/rands/index.html),
 a survey that employs a complex design incorporating both probability
 and non-probability samples.
 
-## Troubleshooting
-
-**Report generation fails**  
-Report generation fails if Quarto CLI has not been installed. Download
-it from [quarto.org](https://quarto.org/docs/get-started/) and restart
-your R session. Also, check that `report.qmd` exists in the expected
-location.
-
-**Missing values warning on design variables**  
-The application checks for `NA` values in your cluster, strata, and
-weight variables. Use the filtering step to remove incomplete cases
-before creating the survey design object.
-
-**File upload fails**  
-Files must be under 300 MB and in a supported format (see [Supported
-file formats](#data-ingestion-and-preparation)). Very large files may
-take a moment to load.
-
-**Multivariable analysis warning: “variables do not have identical
-response options”** Selected variables for multivariable analysis should
-share the same response options. Check that the variables are
-consistent.
-
-**User Guide does not open** Check that `docs/user-guide.html` exists in
-the expected location.
-
 ## Authors and Acknowledgements
 
 **Authors**
 
 - Kristen Cibelli Hibben, CDC/NCHS/DRM/CCQDER (kcibelli@cdc.gov)
 - Sarah Forrest, CDC/NCHS/DRM/OD (sforrest@cdc.gov)
-- Paul Scanlon (former CDC)
-- Zachary Smith (former CDC)
-
-**Organization:** CDC / NCHS / DRM
+- Paul Scanlon (former CDC/NCHS/DRM/CCQDER)
+- Zachary Smith (former CDC/NCHS/DRM/CCQDER)
 
 **Acknowledgements**
 
