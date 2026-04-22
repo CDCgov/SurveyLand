@@ -1,0 +1,196 @@
+---
+title: "SurveyLand User Guide"
+format:
+  html:
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: false
+    smooth-scroll: true
+---
+
+
+**Version:** April 2026\
+**Authors:** Kristen Cibelli Hibben ([kcibelli\@cdc.gov](mailto:kcibelli\@cdc.gov)), Sarah Forrest ([sforrest\@cdc.gov](mailto:sforrest@cdc.gov)), Paul Scanlon (former), and Zachary Smith (former)\
+**Organization:** CDC/NCHS/DRM\
+**GitHub Repository:**  [https://github.com/cdcgov/SurveyLand](https://github.com/cdcgov/SurveyLand)\
+
+> This project is still in development. Features and documentation are subject to change.
+
+## Introduction
+
+*SurveyLand* is an R Shiny application developed by the Division of Research and Methodology at the National Center for Health Statistics (NCHS) to improve the efficiency, transparency, and reproducibility of survey data workflows, while making insights more accessible. It provides a user-friendly, stepwise workflow for preparing survey data, specifying complex survey design features, generating tables and plots, and exporting presentation-ready outputs aligned with NCHS data presentation standards.
+
+Although *SurveyLand* can be used with a wide range of datasets, it's designed to support the unique requirements of complex survey data analysis, including clustering, stratification, and weighting. It is intended for users who need design-based estimates and:
+
+- outputs aligned with NCHS data presentation standards
+- quick export to Word, Excel, or image formats
+- a guided interface for preparing and analyzing data
+
+## Step-by-Step Workflow
+
+1. Upload a supported data file
+2. Enter survey metadata for titles and data source captions
+3. Optionally filter the dataset
+4. Specify survey design and weighting variables
+5. Choose an analysis type
+6. Generate tables and/or plots
+7. Export outputs or add plots to a report
+8. Render and download the report
+
+### Step 1: Upload Data
+
+Click **`Browse…`** and select a datafile for analysis. After upload is complete, a summary displays the number of records (rows) and variables (columns) in the file. Click **`Display codebook?`** to view the variable names in the file and their corresponding labels (if applicable).
+
+**Supported file formats**
+
+| Format | Extension(s) |
+|---|---|
+| Comma-separated values | `.csv` |
+| Excel | `.xlsx`, `.xls` |
+| SAS | `.sas7bdat` |
+| SPSS | `.sav` |
+| R data | `.RData`, `.rdata`, `.Rda`, `.rda`, `.rds`, `.RDS`, `.Rds` |
+
+> Files up to 300 MB are supported. If you need the maximum file size increased, contact [sforrest\@cdc.gov](mailto:sforrest@cdc.gov).
+
+### Step 2: Enter Survey Metadata
+
+Enter applicable details to auto-populate the data source caption and titles in the generated table and/or plot, including the: 
+
+- data producer
+- survey name
+- survey round or cycle
+- data collection date or period
+- geographic area of collection
+
+Click **`Preview data source caption`** to view the standardized caption and edit as needed.
+
+> The standardized caption is flexible to accommodate missing information. If you leave a field blank, it will be omitted from the caption and/or title.
+
+### Step 3: Filter Data
+
+Optionally, data can be filtered by up to two variables. To apply a filter, click **`Yes`**, select a variable from the first drop-down, and then select the value(s) to retain from the second drop-down. 
+
+> The variable drop-down auto-populates with all variables in the uploaded datafile, then the value drop-down auto-populates with the available values for that variable.
+
+Click **`Submit`** to display a filtering summary, including the number of records remaining.
+
+> **Important:** Filtering for subgroup analyses should be used *only* in analyses that do not use survey design information, such as unclustered and unweighted analyses. For complex survey analyses, filtering should be limited to data cleaning, such as removing incomplete cases. Subsetting the data before creating the survey design object can produce incorrect standard errors.
+
+### Step 4: Specify Survey Design
+
+Click **`Yes`** to apply complex survey design, including clustering, stratification, and weighting. Then, select the cluster/PSU, strata, and weight variables (if applicable) from the respective drop-down(s).
+
+> The variable drop-downs auto-populate with all variables in the uploaded datafile. The [`survey`](https://cran.r-project.org/web/packages/survey/index.html) and [`srvyr`](https://cran.r-project.org/web/packages/srvyr/index.html) packages to handle complex survey design.
+
+Click **`Submit`** to display a summary with your selections and confirm whether the survey design object is successfully created. Three weighting and survey design approaches are supported:
+
+- analysis will be *weighted* and design information *will* be used
+- analysis will be *unweighted*, but design information *will* be used
+- analysis will be *unweighted* and design information *will not* be used
+
+> Design variables may not contain missing values. If a specified variable contains incomplete cases, a warning will display because the survey design object cannot be created as specified. Use Step 3 to filter out incomplete cases before proceeding.
+
+### Data Analysis
+
+Three analysis types are supported:
+
+| Type | Description |
+|---|---|
+| **One-way** (single-variable) | Distribution for a single outcome variable |
+| **Two-way** (bi-variable) | Cross-tabulation of an outcome variable by a covariate |
+| **Multivariable** | Distributions across multiple variables sharing the same response options |
+
+Select the variable(s) for analysis from the drop-down(s) and optionally enter variable label(s) to display in the generated table and/or plot.
+
+> For **multivariable analyses**, all selected variables must be of the same type: either *all continuous* or *all categorical*. Mixed variable types are not supported. For categorical variables, all selected variables should use the same response options. A warning will appear if any mismatches are detected. If entering multiple variable labels, separate each with a comma.
+
+#### Tables
+
+Generated tables display tabulated, formatted, and rounded estimates for one-way, two-way, and multivariable analyses as [`flextable`](https://cran.r-project.org/web/packages/flextable/index.html) objects, and include a standardized title and data source caption by default.
+
+For **Continuous/numeric** variables, tables display summary statistics, including: the mean of known values (Mean), with its standard error (SEM), and the standard deviation (SD). Optionally, click **`Yes`** in the **`Options`** tab to show the percentage of observations with known values (⁠% known).
+
+For **Categorical** variables, tables display the estimated percentage (Percent), with its standard error (SE). Optionally, click **`Yes`** in the **`Options`** tab to show the number of observations (row-level Ns) or to suppress low-precision estimates according to NCHS data presentation standards using the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368).
+
+Three export options are supported: 
+
+- PNG image (.png): **`Download as image`**
+- Word document (.docx): **`Download as Word document`**
+- Excel workbook (.xlsx): **`Download as Excel file`**
+  - The exported Excel file is formatted according to NCHS editorial style and publication formatting guidelines.
+
+#### Plots
+
+Bar plots may be generated for one-way, two-way, and multivariable analyses. 
+
+Check **`Do you want to customize the plot?`** to display customization options, including:
+
+- Value labels (rounded to 1 decimal place)
+- Multiple [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html) themes, including a custom NCHS theme, which uses the NCHS color palette
+- Titles, subtitles, captions, axis labels, and legend labels
+- Axis orientation (horizontal/vertical) and bar style (stacked or side-by-side)
+
+Export options include:
+
+- PNG image (.png): `Download as image`
+- `Add to report` (see below)
+
+#### Reports
+
+Click **`Generate report`** (may take a moment), then click **Download report** once ready to generate a formatted Word document including selected plots and survey metadata (if applicable). 
+
+> Report generation requires the [Quarto command-line tools](https://quarto.org/docs/get-started/). Download and install before running the application.
+
+## Troubleshooting
+
+**Report generation fails**  
+Report generation fails if Quarto CLI has not been installed. Download it from [quarto.org](https://quarto.org/docs/get-started/) and restart your R session. Also check that `report.qmd` exists in the expected location.
+
+**Missing values warning on design variables**  
+The application checks for `NA` values in your cluster, strata, and weight variables. Use the filtering step (Step 3) to remove incomplete cases before creating the survey design object.
+
+**File upload fails**  
+Files must be under 300 MB and in a supported format. Very large files may take a moment to load. Contact [sforrest\@cdc.gov](mailto:sforrest@cdc.gov) to request a size limit increase.
+
+**Multivariable analysis warning: "variables do not have identical response options"**  
+Selected variables for multivariable analysis should share the same response options. Check that the variables are consistent before proceeding.
+
+**No output appears**  
+Confirm that data is uploaded, an analysis type is selected, and variable(s) have been selected.
+
+## Additional Information
+
+### The surveytable Package
+
+*SurveyLand* uses [`surveytable`](https://cdcgov.github.io/surveytable/) to support formatted survey tabulations, including suppression of low-precision estimates and alignment with NCHS data presentation standards. See the [package documentation](https://cdcgov.github.io/surveytable/) or [GitHub repository](https://github.com/CDCgov/surveytable) for details and examples.
+
+### Authors and Acknowledgements
+
+**Authors**
+
+- Kristen Cibelli Hibben, CDC/NCHS/DRM ([kcibelli\@cdc.gov](mailto:kcibelli\@cdc.gov))
+- Sarah Forrest, CDC/NCHS/DRM ([sforrest\@cdc.gov](mailto:sforrest\@cdc.gov))
+- Paul Scanlon (former CDC/NCHS/DRM)
+- Zachary Smith (former CDC/NCHS/DRM)
+
+**Acknowledgements**
+
+- CDC Data Science Upskilling (DSU) Program
+- Alex Strashny (author of [`surveytable`](https://cdcgov.github.io/surveytable/))
+
+## Citation
+
+If you use *SurveyLand* in your research, please include the following statement in the Methods section of your article or report:
+
+> Data analyses were performed using the R Shiny application "SurveyLand."
+
+Please cite this software as follows:
+
+> Cibelli Hibben K, Forrest S, Scanlon P, Smith Z (2026). *SurveyLand: An R Shiny application to streamline the analysis and reporting of complex survey data*. National Center for Health Statistics. <https://github.com/CDCgov/SurveyLand>.
+
+---
+
+Thank you for using SurveyLand!

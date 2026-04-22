@@ -1,0 +1,117 @@
+---
+title: "Report"
+format:
+  docx:
+    reference-doc: custom-reference-doc.docx
+    toc: true
+editor: visual
+params:
+  survey_name: NULL
+  survey_round: NULL
+  survey_date: NULL
+  report_items: NULL
+  report_plots: NULL
+---
+
+```{r, include=FALSE}
+# library(tidyverse)
+# library(flextable)
+```
+
+```{r, include=FALSE}
+# Extract details for the methods section
+survey_name <- params$survey_name
+survey_round <- params$survey_round
+survey_date <- params$survey_date
+
+# Extract details for the results section
+# report_tables <- params$report_tables
+report_plots <- params$report_plots
+```
+
+-   *A contents section is optional for shorter reports*
+
+-   *Include all first-level headings from the entire report, all second-level headings from the main body, and all figure and table titles*
+
+# Abstract
+
+-   *Include in all reports*
+
+-   *Provide a brief overview of the report, including the objectives, methods, results, and conclusions as applicable (each section of the abstract should be labeled)*
+
+-   *300 words or less (the abstract is indexed in PubMed)*
+
+## Objectives
+
+## Methods
+
+## Results
+
+## Conclusions
+
+# Keywords
+
+-   *Include in all reports*
+
+-   *4-6 keywords or phrases descriptive of the main concepts in the report*
+
+-   *Words in the title should be avoided in order to add different entry points to the report in electronic searches*
+
+-   *The name of the data source, if not included in the title, should be included as one of the keywords (e.g., Research and Development Survey, web panel survey)*
+
+# Introduction
+
+-   *State the purpose of the report and the public health importance of the topic, providing relevant background information with appropriate citations to the literature (including previous related NCHS reports)*
+
+-   *State what the report adds to the existing literature on the report topic*
+
+-   *No not describe the data source or methods in the introduction section*
+
+# Methods
+
+This data comes from `r survey_name` `r survey_round` which was fielded in `r survey_date`.
+
+-   *Describe the data source, including design and estimation techniques, and any analytic methods used*
+
+-   *Cite relevant NCHS reports on the data source(s) and relevant literature on analytic methods.*
+
+-   *The methods section can be supplemented by an appendix, however a detailed appendix is not necessary for information that can be cited from a previously published report*
+
+# Overall findings
+
+```{r, echo=FALSE, results='asis'}
+if (is.data.frame(report_plots)) {
+  report_plots <- split(report_plots, seq(nrow(report_plots)))
+}
+for (i in seq_along(report_plots)) {
+  plot <- report_plots[[i]]
+  fig_label <- sprintf("Figure %d. %s", i, plot$label[[1]])
+  cat(sprintf("**%s**\n\n![](%s)\n\n", 
+              fig_label, 
+              plot$file[[1]]))
+}
+```
+
+-   *Include in all reports that describe data presented in tables*
+
+-   *This section may include subheadings for presentation of specific findings*
+
+-   *All tabular material may be in this section, or additional detailed tables may follow the references*
+
+-   *The text should add to the reader’s understanding and knowledge of the results and enhance the data presented in tables*
+
+-   *This section may include possible explanations for findings, similarities or differences with previously published results from the same data source or other data sources, policy relevance, and limitations of the data*
+
+# Conclusion
+
+-   *Summarize the most important results and put the data into perspective*
+
+# Appendices
+
+-   *An appendix is not required if the information has been previously published and is referenced in the Methods section*
+
+-   *Provide detail of methods or other technical notes that would impede the flow of the text*
+
+# References
+
+-   *List publications in order cited in the text in Vancouver style*
