@@ -2216,7 +2216,7 @@ server <- function(input, output, session) {
     showNotification("Generating report, please wait...", type = "message")
     report_file <- "survey-report.docx"
     report_plots_with_files <- lapply(report_items$plots, function(x) {
-      tmpfile <- tempfile(fileext = ".png")
+      tmpfile <- normalizePath(tempfile(fileext = ".png"), winslash = "/")
       ggsave(tmpfile, plot = x$plot, width = 8, height = 6, dpi = 600)
       list(label = x$label, file = tmpfile)
     })
