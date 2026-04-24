@@ -34,14 +34,11 @@ Although *SurveyLand* can be used with a wide range of datasets, it's designed t
 
 Files up to 300 MB are supported.
 
-**Survey metadata** 
-Enter metadata that auto-populates table titles, figure titles, and data source captions, including: data producer, survey name, survey round or cycle, field dates, and geographic area.
+**Enter survey metadata** that auto-populates table titles, figure titles, and data source captions, including: data producer, survey name, survey round or cycle, field dates, and geographic area.
 
-**Data filtering**
-Filter by up to two variables before analysis. Users are warned not to pre-filter for subgroup analyses when using complex survey design features, as doing so can produce incorrect standard errors.
+**Filtering data** by up to two variables before analysis.
 
-**Survey design information** 
-Specify cluster/PSU, strata, and weight variables, if applicable. The application checks for missing values in selected design variables and warns when inputs are incomplete.
+**Specify survey design** features including cluster/PSU, strata, and weight variables, if applicable, to account for complex survey design.
 
 ### Data analysis
 
@@ -49,30 +46,49 @@ Three analysis types are supported:
 
 | Type | Description |
 |---|---|
-| **One-way** (single-variable) | Distribution for a single outcome variable |
+| **One-way** (single-variable) | Distribution or summary statistics for a single outcome variable |
 | **Two-way** (bi-variable) | Cross-tabulation of an outcome variable by a covariate |
 | **Multivariable** | Distributions across multiple variables sharing the same response options |
 
 ### Tables
 
-- Generate tabulated, formatted, and rounded survey estimates for one-way, two-way, and multivariable analyses as `flextable` objects
-- Optional suppression of low-precision estimates per NCHS data presentation standards via the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368)
-- Export options: PNG image, Word document (.docx), Excel workbook (.xlsx)
+Generate tabulated, formatted, and rounded survey estimates for one-way, two-way, and multivariable analyses as `flextable` objects.
+
+**Variable type detection**
+
+*SurveyLand* automatically determines whether each selected variable is continuous or categorical. A variable is treated as continuous if it is numeric, not labelled, and has more than 10 unique non-missing values. Otherwise, it is treated as categorical. This affects the type of table output generated:
+
+- Continuous variables: tables display summary statistics, including the mean of known values (Mean), standard error of the mean (SEM), and standard deviation (SD)
+- Categorical variables: tables display the estimated percentage (Percent) and standard error (SE)
+
+**Table formatting conventions:**
+
+Optionally, surpress low-precision estimates according to the NCHS data presentation standards using the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368)
+
+| Symbol | Meaning |
+|--------|---------|
+| `*`    | Estimate does not meet NCHS standards of reliability and has been suppressed |
+| `0.0`  | Quantity is greater than zero but less than 0.05 |
+| `---`  | Data not available (missing) |
+
+All tables include a footnote with: the SE definition, applicable symbol definitions, total number of complete cases (n), a rounding note for categorical tables, and the data source caption from Step 2.
+
+**Export options:** PNG image, Word document (.docx), Excel workbook (.xlsx)
 
 ### Plots
 
-- Generate bar charts for one-way, two-way, and multivariable analyses
-- Customization options:
-  - Value labels on bars
-  - Multiple `ggplot2` themes, and a custom NCHS-style theme
-  - Titles, subtitles, captions, axis labels, and legend labels
-  - Axis orientation (horizontal/vertical) and bar style (stacked or side-by-side)
-- Export option: PNG image
+Generate bar charts for one-way, two-way, and multivariable analyses with options for customization, including: 
+
+- custom text labels
+-value labels
+- Multiple `ggplot2` themes, and a custom NCHS-style theme
+- Axis orientation (horizontal/vertical) and bar style (stacked or side-by-side)
+
+**Export option:** PNG image
 
 ### Report generation
 
-- Render a formatted Word document report using Quarto
-- Add selected plots and survey metadata to the report for download
+Generate and download formatted Word document report that contains selected plots and survey metadata using Quarto.
 
 ## Workflow
 

@@ -84,7 +84,7 @@ To apply a filter, select **`Filter the data?`**, then:
 
 > Multiple values are allowed; all records matching any selected value will be retained. Records with missing values in the filter variable are excluded automatically
 
-3.  Optionally, check **`Filter on a second variable?`** and repeat for a second variable. Both conditions are applied together (AND logic).
+3.  Optionally, select **`Filter on a second variable?`** and repeat for a second variable. Both conditions are applied together (AND logic).
 
 Click **`Submit`** to display a filtering summary, including the number of records remaining.
 
