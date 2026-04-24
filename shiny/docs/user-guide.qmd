@@ -41,7 +41,9 @@ Although *SurveyLand* can be used with a wide range of datasets, it's designed t
 
 ### Step 1: Upload Data
 
-Click **`Browse…`** and select a datafile for analysis. After upload is complete, a summary displays the number of records (rows) and variables (columns) in the file. Click **`Display codebook?`** to view the variable names in the file and their corresponding labels (if applicable).
+Click **`Browse…`** and select a data file for analysis. After upload is complete, a summary displays the number of records (rows) and variables (columns) in the file. 
+
+Click **`Display codebook?`** to view a searchable table of variable names and their corresponding labels (if present in the file).
 
 **Supported file formats**
 
@@ -57,109 +59,192 @@ Click **`Browse…`** and select a datafile for analysis. After upload is comple
 
 ### Step 2: Enter Survey Metadata
 
-Enter applicable details to auto-populate the data source caption and titles in the generated table and/or plot, including the: 
+Enter applicable details to auto-populate the data source caption and titles used in the generated tables and plots.
 
-- data producer
-- survey name
-- survey round or cycle
-- data collection date or period
-- geographic area of collection
+| Field                          | Default value                          |
+|--------------------------------|----------------------------------------|
+| Data producer                  | National Center for Health Statistics  |
+| Survey name                    | *(blank)*                              |
+| Survey round or cycle          | *(blank)*                              |
+| Data collection date or period | *(blank)*                              |
+| Geographic area of collection  | United States                          |
 
-Click **`Preview data source caption`** to view the standardized caption and edit as needed.
+Click **`Preview data source caption`** to view the standardized caption and edit as needed. The caption follows the format: SOURCE: \[Data producer\], \[Survey name\] \[Survey round\], \[Date\].
 
-> The standardized caption is flexible to accommodate missing information. If you leave a field blank, it will be omitted from the caption and/or title.
+> The format is flexible to accommodate missing information. Fields left blank are omitted from the caption caption and/or title. The geographic area and date also appear titles.
 
 ### Step 3: Filter Data
 
-Optionally, data can be filtered by up to two variables. To apply a filter, click **`Yes`**, select a variable from the first drop-down, and then select the value(s) to retain from the second drop-down. 
+Optionally, data can be filtered by up to two variables. By default, the complete, unfiltered dataset is used. 
 
-> The variable drop-down auto-populates with all variables in the uploaded datafile, then the value drop-down auto-populates with the available values for that variable.
+To apply a filter, select **`Filter the data?`**, then:
+
+1.  Select a variable from the **`Select the variable to filter on`** drop-down.
+2.  Select one or more values from **`Specify the value(s) to filter on`**. 
+
+> Multiple values are allowed; all records matching any selected value will be retained. Records with missing values in the filter variable are excluded automatically
+
+3.  Optionally, check **`Filter on a second variable?`** and repeat for a second variable. Both conditions are applied together (AND logic).
 
 Click **`Submit`** to display a filtering summary, including the number of records remaining.
+
+>  The variable drop-down auto-populates with all variables in the uploaded data file. The value drop-down then auto-populates with the available values for the selected variable.
 
 > **Important:** Filtering for subgroup analyses should be used *only* in analyses that do not use survey design information, such as unclustered and unweighted analyses. For complex survey analyses, filtering should be limited to data cleaning, such as removing incomplete cases. Subsetting the data before creating the survey design object can produce incorrect standard errors.
 
 ### Step 4: Specify Survey Design
 
-Click **`Yes`** to apply complex survey design, including clustering, stratification, and weighting. Then, select the cluster/PSU, strata, and weight variables (if applicable) from the respective drop-down(s).
+To account for complex survey design, select each feature to include and select the corresponding variable(s) from the drop-down(s). Any combination of the three is supported. If none are selected, an unweighted, unstratified, and unclustered design object will be used by default.
 
-> The variable drop-downs auto-populate with all variables in the uploaded datafile. The [`survey`](https://cran.r-project.org/web/packages/survey/index.html) and [`srvyr`](https://cran.r-project.org/web/packages/srvyr/index.html) packages to handle complex survey design.
+| Feature | Purpose |
+|---|---|
+| **`Use a cluster / PSU variable?`** | Enables clustered variance estimation |
+| **`Use a strata variable?`** | Enables stratified variance estimation |
+| **`Use survey weights?`** | Applies analytic weights to all estimates |
 
-Click **`Submit`** to display a summary with your selections and confirm whether the survey design object is successfully created. Three weighting and survey design approaches are supported:
+Click **`Submit`** to display a summary with your selections, including the variables assigned to `ids`, `strata`, and `weights`, and whether the survey design object was successfully created.
 
-- analysis will be *weighted* and design information *will* be used
-- analysis will be *unweighted*, but design information *will* be used
-- analysis will be *unweighted* and design information *will not* be used
+> The variable drop-downs auto-populate with all variables in the uploaded data file. The [`survey`](https://cran.r-project.org/web/packages/survey/index.html) and [`srvyr`](https://cran.r-project.org/web/packages/srvyr/index.html) packages to handle complex survey design.
 
-> Design variables may not contain missing values. If a specified variable contains incomplete cases, a warning will display because the survey design object cannot be created as specified. Use Step 3 to filter out incomplete cases before proceeding.
+> **Missing value warning:** The application checks for missing values in the selected cluster, strata, and weight variables. If a selected variable contains incomplete cases, a warning will display because the survey design object cannot be created as specified. Use Step 3 to filter out incomplete cases before proceeding.
 
 ### Data Analysis
 
-Three analysis types are supported:
+Select an analysis type from the sidebar before generating tables or plots. Three analysis types are supported:
 
 | Type | Description |
 |---|---|
-| **One-way** (single-variable) | Distribution for a single outcome variable |
+| **One-way** (single-variable) | Distribution or summary statistics for a single outcome variable |
 | **Two-way** (bi-variable) | Cross-tabulation of an outcome variable by a covariate |
-| **Multivariable** | Distributions across multiple variables sharing the same response options |
+| **Multivariable** | Distributions across multiple variables |
 
 Select the variable(s) for analysis from the drop-down(s) and optionally enter variable label(s) to display in the generated table and/or plot.
 
-> For **multivariable analyses**, all selected variables must be of the same type: either *all continuous* or *all categorical*. Mixed variable types are not supported. For categorical variables, all selected variables should use the same response options. A warning will appear if any mismatches are detected. If entering multiple variable labels, separate each with a comma.
+> Variable dropdowns are auto-populated with all column names from the uploaded data file. Variable labels are auto-populated using the variable names and can be edited.
+
+**Variable type detection:** *SurveyLand* automatically determines whether each variable is continuous or categorical. A variable is treated as **continuous** if it is numeric, not labelled, and has more than 10 unique non-missing values. Otherwise, it is treated as **categorical**. This affects the type of table generated.
+
+> **For multivariable analyses**, all selected variables must be of the same type: either *all continuous* or *all categorical*. Mixed variable types are not supported. A warning will appear if mismatches are detected. If entering multiple variable labels, separate each with a comma.
 
 #### Tables
 
 Generated tables display tabulated, formatted, and rounded estimates for one-way, two-way, and multivariable analyses as [`flextable`](https://cran.r-project.org/web/packages/flextable/index.html) objects, and include a standardized title and data source caption by default.
 
-For **Continuous/numeric** variables, tables display summary statistics, including: the mean of known values (Mean), with its standard error (SEM), and the standard deviation (SD). Optionally, click **`Yes`** in the **`Options`** tab to show the percentage of observations with known values (⁠% known).
+For **continuous or numeric** variables, tables display summary statistics, including the mean of known values (Mean), standard error of the mean (SEM), and standard deviation (SD).
 
-For **Categorical** variables, tables display the estimated percentage (Percent), with its standard error (SE). Optionally, click **`Yes`** in the **`Options`** tab to show the number of observations (row-level Ns) or to suppress low-precision estimates according to NCHS data presentation standards using the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368).
+For **categorical** variables, tables display the estimated percentage (Percent) and standard error (SE). A warning will display if the same variable is selected as both the outcome and covariate; this combination is not supported.
 
-Three export options are supported: 
+**Table options** (available in the **`Options`** sub-tab):
 
-- PNG image (.png): **`Download as image`**
-- Word document (.docx): **`Download as Word document`**
-- Excel workbook (.xlsx): **`Download as Excel file`**
-  - The exported Excel file is formatted according to NCHS editorial style and publication formatting guidelines.
+*For continuous variables (one-way, two-way, and multivariable):*
+
+-   **`Display percent known values?`**: Adds a column showing the percentage of non-missing observations (% known).
+
+*For categorical variables (one-way, two-way, and multivariable):*
+
+-   **`Display Ns?`**: Adds a column showing the unweighted row count for each response level.
+-   **`Suppress low-precision estimates?`**: Applies NCHS data presentation standards using the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368). Estimates flagged for suppression are replaced with `*` in the output, and the footnote is updated accordingly.
+
+**Table formatting conventions and footnotes:**
+
+| Symbol | Meaning |
+|--------|---------|
+| `*`    | Estimate does not meet NCHS standards of reliability and has been suppressed |
+| `0.0`  | Quantity is greater than zero but less than 0.05 |
+| `---`  | Data not available (missing) |
+
+All tables include a footnote with: the SE definition, applicable symbol definitions, total number of complete cases (n), a rounding note for categorical tables, and the data source caption from Step 2.
+
+**Export options:**
+
+-   **`Download image`**: Saves the table as a high-resolution PNG (600 dpi)
+-   **`Download Word document`**: Saves the table as a `.docx` file
+-   **`Download Excel file`**: Saves the table as a formatted `.xlsx` file with a title row, grouped header (if applicable), data, and footnote, formatted according to NCHS editorial style and publication formatting guidelines
+
+
+Optionally, select **`Display row-level totals (Ns)?`** in the **`Options`** tab to show the number of observations (row-level Ns) or select **`Suppress low-precision estimates according to NCHS data presentation standards using the surveytable package?`** to suppress low-precision estimates according to NCHS data presentation standards using the [`surveytable`](https://cdcgov.github.io/surveytable/) package, which implements the methods described in [Parker et al. (2017)](https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf) and [Parker et al. (2023)](https://doi.org/10.15620/cdc:124368).
 
 #### Plots
 
 Bar plots may be generated for one-way, two-way, and multivariable analyses. 
 
-Check **`Do you want to customize the plot?`** to display customization options, including:
+-   **One-way**: vertical bar chart of the percent distribution of the outcome variable
+-   **Two-way**: grouped (dodged) bar chart with the covariate on the x-axis and the outcome as the bar fill color
+-   **Multivariable**: stacked or side-by-side bar chart across all selected variables
 
-- Value labels (rounded to 1 decimal place)
-- Multiple [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html) themes, including a custom NCHS theme, which uses the NCHS color palette
-- Titles, subtitles, captions, axis labels, and legend labels
-- Axis orientation (horizontal/vertical) and bar style (stacked or side-by-side)
 
-Export options include:
+**Plot options** (available in the **`Options`** sub-tab):
 
-- PNG image (.png): `Download as image`
-- `Add to report` (see below)
+*Available for all analysis types:*
+
+-   **`Display value labels?`**: Overlays formatted percent values (e.g., `42.3`) on each bar
+-   **`Select a ggplot or NCHS theme`**: Choose from the following themes:
+
+| Label        | Description                                                  |
+|--------------|--------------------------------------------------------------|
+| BW           | White background with gridlines |
+| Classic      | Minimal axes, no gridlines |
+| Dark         | Dark background |
+| Gray         | Default ggplot2 gray background |
+| Light        | Light gray gridlines |
+| Line Drawing | Black lines only |
+| Minimal      | No background, minimal gridlines |
+| NCHS         | Custom NCHS theme with NCHS color palette |
+
+> When the **NCHS** theme is selected, one-way chart bars are rendered in NCHS green (`#006858`). Multi-category charts use the official NCHS color palette: `#006858`, `#008BB0`, `#D06F1A`, `#FFD200`, `#695E4A`, `#0057b7`.
+
+- **Custom label overrides**: Enter custom text to replace auto-generated titles, subtitles, x-axis labels, y-axis labels, and captions. If left blank, defaults are used. The default caption comes from the data source caption configured in Step 2.
+
+*Available for two-way and multivariable analyses:*
+
+-   **`Enter legend label`**: Enter a custom label for the plot legend.
+
+*Available for multivariable analyses only:*
+
+-   **`Flip axes?`**: Rotates the chart so bars are displayed horizontally.
+-   **`Select a bar position`**: Choose **Stacked** (bars stack to 100%) or **Side-by-side (dodged)** (bars displayed adjacent to each other).
+
+**Export options:**
+
+-   **`Download image`**: Saves the plot as a high-resolution PNG (600 dpi)
+-   **`Add to report`**: Includes the current plot in the generated Word report. A notification confirms the plot has been added. Multiple plots can be queued across different analyses.
 
 #### Reports
 
-Click **`Generate report`** (may take a moment), then click **Download report** once ready to generate a formatted Word document including selected plots and survey metadata (if applicable). 
+The **Report** tab generates a formatted Word document.
+
+1.  Add plots using the **`Add to report`** button on any plot output.
+2.  Click **`Generate report`** to render a Quarto template to a Word document using the survey metadata from Step 2 and any selected plots (if applicable). Report generation may take a moment.
+3.  Once generation is complete, click **`Download report`** to save the Word document.
+
+> The **`Download report`** button is disabled until report generation is complete. If generation is in progress, a notification will display. A second notification will display to confirm success or report an error.
 
 > Report generation requires the [Quarto command-line tools](https://quarto.org/docs/get-started/). Download and install before running the application.
 
 ## Troubleshooting
 
-**Report generation fails**  
-Report generation fails if Quarto CLI has not been installed. Download it from [quarto.org](https://quarto.org/docs/get-started/) and restart your R session. Also check that `report.qmd` exists in the expected location.
+**Report generation fails**\
+Verify that Quarto CLI is installed. Download it from [quarto.org](https://quarto.org/docs/get-started/) and restart your R session. Also confirm that `report.qmd` exists in the application directory.
 
-**Missing values warning on design variables**  
-The application checks for `NA` values in your cluster, strata, and weight variables. Use the filtering step (Step 3) to remove incomplete cases before creating the survey design object.
+**Missing values warning on design variables**\
+The application checks for `NA` values in the selected cluster, strata, and weight variables. Use Step 3 to filter out incomplete cases before creating the survey design object.
 
-**File upload fails**  
+**File upload fails**\
 Files must be under 300 MB and in a supported format. Very large files may take a moment to load. Contact [sforrest\@cdc.gov](mailto:sforrest@cdc.gov) to request a size limit increase.
 
-**Multivariable analysis warning: "variables do not have identical response options"**  
-Selected variables for multivariable analysis should share the same response options. Check that the variables are consistent before proceeding.
+**Multivariable warning: mixed variable types**\
+All variables selected for multivariable analysis must be of the same type — either all continuous or all categorical. Review the selected variables and remove any that differ in type.
 
-**No output appears**  
-Confirm that data is uploaded, an analysis type is selected, and variable(s) have been selected.
+**Two-way table warning: same variable selected twice**\
+The outcome and covariate cannot be the same variable for a two-way table or plot. Select a different variable for one of the two.
+
+**No output appears**\
+Confirm that a data file is uploaded, an analysis type is selected, and variable(s) have been selected.
+
+**Estimates appear as `*`**\
+Estimates flagged by the `surveytable` package as not meeting NCHS standards of reliability have been suppressed. This is expected behavior when the **`Suppress low-precision estimates?`** option is enabled.
+
+---
 
 ## Additional Information
 
@@ -193,4 +278,4 @@ Please cite this software as follows:
 
 ---
 
-Thank you for using SurveyLand!
+Thank you for using *SurveyLand*!

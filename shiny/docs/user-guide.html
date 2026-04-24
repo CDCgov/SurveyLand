@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>SurveyLand User Guide</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -24,22 +27,23 @@ ul.task-list li input[type="checkbox"] {
 
 
 <script src="user-guide_files/libs/clipboard/clipboard.min.js"></script>
-<script src="user-guide_files/libs/quarto-html/quarto.js"></script>
+<script src="user-guide_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="user-guide_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="user-guide_files/libs/quarto-html/popper.min.js"></script>
 <script src="user-guide_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="user-guide_files/libs/quarto-html/anchor.min.js"></script>
 <link href="user-guide_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="user-guide_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="user-guide_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="user-guide_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="user-guide_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="user-guide_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="user-guide_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <style>html{ scroll-behavior: smooth; }</style>
 
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -119,9 +123,10 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <section id="step-1-upload-data" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-upload-data">Step 1: Upload Data</h3>
-<p>Click <strong><code>Browse…</code></strong> and select a datafile for analysis. After upload is complete, a summary displays the number of records (rows) and variables (columns) in the file. Click <strong><code>Display codebook?</code></strong> to view the variable names in the file and their corresponding labels (if applicable).</p>
+<p>Click <strong><code>Browse…</code></strong> and select a data file for analysis. After upload is complete, a summary displays the number of records (rows) and variables (columns) in the file.</p>
+<p>Click <strong><code>Display codebook?</code></strong> to view a searchable table of variable names and their corresponding labels (if present in the file).</p>
 <p><strong>Supported file formats</strong></p>
-<table class="table">
+<table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Format</th>
@@ -157,50 +162,109 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="step-2-enter-survey-metadata" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-enter-survey-metadata">Step 2: Enter Survey Metadata</h3>
-<p>Enter applicable details to auto-populate the data source caption and titles in the generated table and/or plot, including the:</p>
-<ul>
-<li>data producer</li>
-<li>survey name</li>
-<li>survey round or cycle</li>
-<li>data collection date or period</li>
-<li>geographic area of collection</li>
-</ul>
-<p>Click <strong><code>Preview data source caption</code></strong> to view the standardized caption and edit as needed.</p>
+<p>Enter applicable details to auto-populate the data source caption and titles used in the generated tables and plots.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data producer</td>
+<td>National Center for Health Statistics</td>
+</tr>
+<tr class="even">
+<td>Survey name</td>
+<td><em>(blank)</em></td>
+</tr>
+<tr class="odd">
+<td>Survey round or cycle</td>
+<td><em>(blank)</em></td>
+</tr>
+<tr class="even">
+<td>Data collection date or period</td>
+<td><em>(blank)</em></td>
+</tr>
+<tr class="odd">
+<td>Geographic area of collection</td>
+<td>United States</td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong><code>Preview data source caption</code></strong> to view the standardized caption and edit as needed. The caption follows the format: SOURCE: [Data producer], [Survey name] [Survey round], [Date].</p>
 <blockquote class="blockquote">
-<p>The standardized caption is flexible to accommodate missing information. If you leave a field blank, it will be omitted from the caption and/or title.</p>
+<p>The format is flexible to accommodate missing information. Fields left blank are omitted from the caption caption and/or title. The geographic area and date also appear titles.</p>
 </blockquote>
 </section>
 <section id="step-3-filter-data" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-filter-data">Step 3: Filter Data</h3>
-<p>Optionally, data can be filtered by up to two variables. To apply a filter, click <strong><code>Yes</code></strong>, select a variable from the first drop-down, and then select the value(s) to retain from the second drop-down.</p>
+<p>Optionally, data can be filtered by up to two variables. By default, the complete, unfiltered dataset is used.</p>
+<p>To apply a filter, select <strong><code>Filter the data?</code></strong>, then:</p>
+<ol type="1">
+<li>Select a variable from the <strong><code>Select the variable to filter on</code></strong> drop-down.</li>
+<li>Select one or more values from <strong><code>Specify the value(s) to filter on</code></strong>.</li>
+</ol>
 <blockquote class="blockquote">
-<p>The variable drop-down auto-populates with all variables in the uploaded datafile, then the value drop-down auto-populates with the available values for that variable.</p>
+<p>Multiple values are allowed; all records matching any selected value will be retained. Records with missing values in the filter variable are excluded automatically</p>
 </blockquote>
+<ol start="3" type="1">
+<li>Optionally, check <strong><code>Filter on a second variable?</code></strong> and repeat for a second variable. Both conditions are applied together (AND logic).</li>
+</ol>
 <p>Click <strong><code>Submit</code></strong> to display a filtering summary, including the number of records remaining.</p>
+<blockquote class="blockquote">
+<p>The variable drop-down auto-populates with all variables in the uploaded data file. The value drop-down then auto-populates with the available values for the selected variable.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p><strong>Important:</strong> Filtering for subgroup analyses should be used <em>only</em> in analyses that do not use survey design information, such as unclustered and unweighted analyses. For complex survey analyses, filtering should be limited to data cleaning, such as removing incomplete cases. Subsetting the data before creating the survey design object can produce incorrect standard errors.</p>
 </blockquote>
 </section>
 <section id="step-4-specify-survey-design" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-specify-survey-design">Step 4: Specify Survey Design</h3>
-<p>Click <strong><code>Yes</code></strong> to apply complex survey design, including clustering, stratification, and weighting. Then, select the cluster/PSU, strata, and weight variables (if applicable) from the respective drop-down(s).</p>
+<p>To account for complex survey design, select each feature to include and select the corresponding variable(s) from the drop-down(s). Any combination of the three is supported. If none are selected, an unweighted, unstratified, and unclustered design object will be used by default.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><code>Use a cluster / PSU variable?</code></strong></td>
+<td>Enables clustered variance estimation</td>
+</tr>
+<tr class="even">
+<td><strong><code>Use a strata variable?</code></strong></td>
+<td>Enables stratified variance estimation</td>
+</tr>
+<tr class="odd">
+<td><strong><code>Use survey weights?</code></strong></td>
+<td>Applies analytic weights to all estimates</td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong><code>Submit</code></strong> to display a summary with your selections, including the variables assigned to <code>ids</code>, <code>strata</code>, and <code>weights</code>, and whether the survey design object was successfully created.</p>
 <blockquote class="blockquote">
-<p>The variable drop-downs auto-populate with all variables in the uploaded datafile. The <a href="https://cran.r-project.org/web/packages/survey/index.html"><code>survey</code></a> and <a href="https://cran.r-project.org/web/packages/srvyr/index.html"><code>srvyr</code></a> packages to handle complex survey design.</p>
+<p>The variable drop-downs auto-populate with all variables in the uploaded data file. The <a href="https://cran.r-project.org/web/packages/survey/index.html"><code>survey</code></a> and <a href="https://cran.r-project.org/web/packages/srvyr/index.html"><code>srvyr</code></a> packages to handle complex survey design.</p>
 </blockquote>
-<p>Click <strong><code>Submit</code></strong> to display a summary with your selections and confirm whether the survey design object is successfully created. Three weighting and survey design approaches are supported:</p>
-<ul>
-<li>analysis will be <em>weighted</em> and design information <em>will</em> be used</li>
-<li>analysis will be <em>unweighted</em>, but design information <em>will</em> be used</li>
-<li>analysis will be <em>unweighted</em> and design information <em>will not</em> be used</li>
-</ul>
 <blockquote class="blockquote">
-<p>Design variables may not contain missing values. If a specified variable contains incomplete cases, a warning will display because the survey design object cannot be created as specified. Use Step 3 to filter out incomplete cases before proceeding.</p>
+<p><strong>Missing value warning:</strong> The application checks for missing values in the selected cluster, strata, and weight variables. If a selected variable contains incomplete cases, a warning will display because the survey design object cannot be created as specified. Use Step 3 to filter out incomplete cases before proceeding.</p>
 </blockquote>
 </section>
 <section id="data-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="data-analysis">Data Analysis</h3>
-<p>Three analysis types are supported:</p>
-<table class="table">
+<p>Select an analysis type from the sidebar before generating tables or plots. Three analysis types are supported:</p>
+<table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -214,7 +278,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td><strong>One-way</strong> (single-variable)</td>
-<td>Distribution for a single outcome variable</td>
+<td>Distribution or summary statistics for a single outcome variable</td>
 </tr>
 <tr class="even">
 <td><strong>Two-way</strong> (bi-variable)</td>
@@ -222,48 +286,161 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><strong>Multivariable</strong></td>
-<td>Distributions across multiple variables sharing the same response options</td>
+<td>Distributions across multiple variables</td>
 </tr>
 </tbody>
 </table>
 <p>Select the variable(s) for analysis from the drop-down(s) and optionally enter variable label(s) to display in the generated table and/or plot.</p>
 <blockquote class="blockquote">
-<p>For <strong>multivariable analyses</strong>, all selected variables must be of the same type: either <em>all continuous</em> or <em>all categorical</em>. Mixed variable types are not supported. For categorical variables, all selected variables should use the same response options. A warning will appear if any mismatches are detected. If entering multiple variable labels, separate each with a comma.</p>
+<p>Variable dropdowns are auto-populated with all column names from the uploaded data file. Variable labels are auto-populated using the variable names and can be edited.</p>
+</blockquote>
+<p><strong>Variable type detection:</strong> <em>SurveyLand</em> automatically determines whether each variable is continuous or categorical. A variable is treated as <strong>continuous</strong> if it is numeric, not labelled, and has more than 10 unique non-missing values. Otherwise, it is treated as <strong>categorical</strong>. This affects the type of table generated.</p>
+<blockquote class="blockquote">
+<p><strong>For multivariable analyses</strong>, all selected variables must be of the same type: either <em>all continuous</em> or <em>all categorical</em>. Mixed variable types are not supported. A warning will appear if mismatches are detected. If entering multiple variable labels, separate each with a comma.</p>
 </blockquote>
 <section id="tables" class="level4">
 <h4 class="anchored" data-anchor-id="tables">Tables</h4>
 <p>Generated tables display tabulated, formatted, and rounded estimates for one-way, two-way, and multivariable analyses as <a href="https://cran.r-project.org/web/packages/flextable/index.html"><code>flextable</code></a> objects, and include a standardized title and data source caption by default.</p>
-<p>For <strong>Continuous/numeric</strong> variables, tables display summary statistics, including: the mean of known values (Mean), with its standard error (SEM), and the standard deviation (SD). Optionally, click <strong><code>Yes</code></strong> in the <strong><code>Options</code></strong> tab to show the percentage of observations with known values (⁠% known).</p>
-<p>For <strong>Categorical</strong> variables, tables display the estimated percentage (Percent), with its standard error (SE). Optionally, click <strong><code>Yes</code></strong> in the <strong><code>Options</code></strong> tab to show the number of observations (row-level Ns) or to suppress low-precision estimates according to NCHS data presentation standards using the <a href="https://cdcgov.github.io/surveytable/"><code>surveytable</code></a> package, which implements the methods described in <a href="https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf">Parker et al.&nbsp;(2017)</a> and <a href="https://doi.org/10.15620/cdc:124368">Parker et al.&nbsp;(2023)</a>.</p>
-<p>Three export options are supported:</p>
+<p>For <strong>continuous or numeric</strong> variables, tables display summary statistics, including the mean of known values (Mean), standard error of the mean (SEM), and standard deviation (SD).</p>
+<p>For <strong>categorical</strong> variables, tables display the estimated percentage (Percent) and standard error (SE). A warning will display if the same variable is selected as both the outcome and covariate; this combination is not supported.</p>
+<p><strong>Table options</strong> (available in the <strong><code>Options</code></strong> sub-tab):</p>
+<p><em>For continuous variables (one-way, two-way, and multivariable):</em></p>
 <ul>
-<li>PNG image (.png): <strong><code>Download as image</code></strong></li>
-<li>Word document (.docx): <strong><code>Download as Word document</code></strong></li>
-<li>Excel workbook (.xlsx): <strong><code>Download as Excel file</code></strong>
-<ul>
-<li>The exported Excel file is formatted according to NCHS editorial style and publication formatting guidelines.</li>
-</ul></li>
+<li><strong><code>Display percent known values?</code></strong>: Adds a column showing the percentage of non-missing observations (% known).</li>
 </ul>
+<p><em>For categorical variables (one-way, two-way, and multivariable):</em></p>
+<ul>
+<li><strong><code>Display Ns?</code></strong>: Adds a column showing the unweighted row count for each response level.</li>
+<li><strong><code>Suppress low-precision estimates?</code></strong>: Applies NCHS data presentation standards using the <a href="https://cdcgov.github.io/surveytable/"><code>surveytable</code></a> package, which implements the methods described in <a href="https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf">Parker et al.&nbsp;(2017)</a> and <a href="https://doi.org/10.15620/cdc:124368">Parker et al.&nbsp;(2023)</a>. Estimates flagged for suppression are replaced with <code>*</code> in the output, and the footnote is updated accordingly.</li>
+</ul>
+<p><strong>Table formatting conventions and footnotes:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>*</code></td>
+<td>Estimate does not meet NCHS standards of reliability and has been suppressed</td>
+</tr>
+<tr class="even">
+<td><code>0.0</code></td>
+<td>Quantity is greater than zero but less than 0.05</td>
+</tr>
+<tr class="odd">
+<td><code>---</code></td>
+<td>Data not available (missing)</td>
+</tr>
+</tbody>
+</table>
+<p>All tables include a footnote with: the SE definition, applicable symbol definitions, total number of complete cases (n), a rounding note for categorical tables, and the data source caption from Step 2.</p>
+<p><strong>Export options:</strong></p>
+<ul>
+<li><strong><code>Download image</code></strong>: Saves the table as a high-resolution PNG (600 dpi)</li>
+<li><strong><code>Download Word document</code></strong>: Saves the table as a <code>.docx</code> file</li>
+<li><strong><code>Download Excel file</code></strong>: Saves the table as a formatted <code>.xlsx</code> file with a title row, grouped header (if applicable), data, and footnote, formatted according to NCHS editorial style and publication formatting guidelines</li>
+</ul>
+<p>Optionally, select <strong><code>Display row-level totals (Ns)?</code></strong> in the <strong><code>Options</code></strong> tab to show the number of observations (row-level Ns) or select <strong><code>Suppress low-precision estimates according to NCHS data presentation standards using the surveytable package?</code></strong> to suppress low-precision estimates according to NCHS data presentation standards using the <a href="https://cdcgov.github.io/surveytable/"><code>surveytable</code></a> package, which implements the methods described in <a href="https://www.cdc.gov/nchs/data/series/sr_02/sr02_175.pdf">Parker et al.&nbsp;(2017)</a> and <a href="https://doi.org/10.15620/cdc:124368">Parker et al.&nbsp;(2023)</a>.</p>
 </section>
 <section id="plots" class="level4">
 <h4 class="anchored" data-anchor-id="plots">Plots</h4>
 <p>Bar plots may be generated for one-way, two-way, and multivariable analyses.</p>
-<p>Check <strong><code>Do you want to customize the plot?</code></strong> to display customization options, including:</p>
 <ul>
-<li>Value labels (rounded to 1 decimal place)</li>
-<li>Multiple <a href="https://cran.r-project.org/web/packages/ggplot2/index.html"><code>ggplot2</code></a> themes, including a custom NCHS theme, which uses the NCHS color palette</li>
-<li>Titles, subtitles, captions, axis labels, and legend labels</li>
-<li>Axis orientation (horizontal/vertical) and bar style (stacked or side-by-side)</li>
+<li><strong>One-way</strong>: vertical bar chart of the percent distribution of the outcome variable</li>
+<li><strong>Two-way</strong>: grouped (dodged) bar chart with the covariate on the x-axis and the outcome as the bar fill color</li>
+<li><strong>Multivariable</strong>: stacked or side-by-side bar chart across all selected variables</li>
 </ul>
-<p>Export options include:</p>
+<p><strong>Plot options</strong> (available in the <strong><code>Options</code></strong> sub-tab):</p>
+<p><em>Available for all analysis types:</em></p>
 <ul>
-<li>PNG image (.png): <code>Download as image</code></li>
-<li><code>Add to report</code> (see below)</li>
+<li><strong><code>Display value labels?</code></strong>: Overlays formatted percent values (e.g., <code>42.3</code>) on each bar</li>
+<li><strong><code>Select a ggplot or NCHS theme</code></strong>: Choose from the following themes:</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BW</td>
+<td>White background with gridlines</td>
+</tr>
+<tr class="even">
+<td>Classic</td>
+<td>Minimal axes, no gridlines</td>
+</tr>
+<tr class="odd">
+<td>Dark</td>
+<td>Dark background</td>
+</tr>
+<tr class="even">
+<td>Gray</td>
+<td>Default ggplot2 gray background</td>
+</tr>
+<tr class="odd">
+<td>Light</td>
+<td>Light gray gridlines</td>
+</tr>
+<tr class="even">
+<td>Line Drawing</td>
+<td>Black lines only</td>
+</tr>
+<tr class="odd">
+<td>Minimal</td>
+<td>No background, minimal gridlines</td>
+</tr>
+<tr class="even">
+<td>NCHS</td>
+<td>Custom NCHS theme with NCHS color palette</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>When the <strong>NCHS</strong> theme is selected, one-way chart bars are rendered in NCHS green (<code>#006858</code>). Multi-category charts use the official NCHS color palette: <code>#006858</code>, <code>#008BB0</code>, <code>#D06F1A</code>, <code>#FFD200</code>, <code>#695E4A</code>, <code>#0057b7</code>.</p>
+</blockquote>
+<ul>
+<li><strong>Custom label overrides</strong>: Enter custom text to replace auto-generated titles, subtitles, x-axis labels, y-axis labels, and captions. If left blank, defaults are used. The default caption comes from the data source caption configured in Step 2.</li>
+</ul>
+<p><em>Available for two-way and multivariable analyses:</em></p>
+<ul>
+<li><strong><code>Enter legend label</code></strong>: Enter a custom label for the plot legend.</li>
+</ul>
+<p><em>Available for multivariable analyses only:</em></p>
+<ul>
+<li><strong><code>Flip axes?</code></strong>: Rotates the chart so bars are displayed horizontally.</li>
+<li><strong><code>Select a bar position</code></strong>: Choose <strong>Stacked</strong> (bars stack to 100%) or <strong>Side-by-side (dodged)</strong> (bars displayed adjacent to each other).</li>
+</ul>
+<p><strong>Export options:</strong></p>
+<ul>
+<li><strong><code>Download image</code></strong>: Saves the plot as a high-resolution PNG (600 dpi)</li>
+<li><strong><code>Add to report</code></strong>: Includes the current plot in the generated Word report. A notification confirms the plot has been added. Multiple plots can be queued across different analyses.</li>
 </ul>
 </section>
 <section id="reports" class="level4">
 <h4 class="anchored" data-anchor-id="reports">Reports</h4>
-<p>Click <strong><code>Generate report</code></strong> (may take a moment), then click <strong>Download report</strong> once ready to generate a formatted Word document including selected plots and survey metadata (if applicable).</p>
+<p>The <strong>Report</strong> tab generates a formatted Word document.</p>
+<ol type="1">
+<li>Add plots using the <strong><code>Add to report</code></strong> button on any plot output.</li>
+<li>Click <strong><code>Generate report</code></strong> to render a Quarto template to a Word document using the survey metadata from Step 2 and any selected plots (if applicable). Report generation may take a moment.</li>
+<li>Once generation is complete, click <strong><code>Download report</code></strong> to save the Word document.</li>
+</ol>
+<blockquote class="blockquote">
+<p>The <strong><code>Download report</code></strong> button is disabled until report generation is complete. If generation is in progress, a notification will display. A second notification will display to confirm success or report an error.</p>
+</blockquote>
 <blockquote class="blockquote">
 <p>Report generation requires the <a href="https://quarto.org/docs/get-started/">Quarto command-line tools</a>. Download and install before running the application.</p>
 </blockquote>
@@ -273,15 +450,20 @@ ul.task-list li input[type="checkbox"] {
 <section id="troubleshooting" class="level2">
 <h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
 <p><strong>Report generation fails</strong><br>
-Report generation fails if Quarto CLI has not been installed. Download it from <a href="https://quarto.org/docs/get-started/">quarto.org</a> and restart your R session. Also check that <code>report.qmd</code> exists in the expected location.</p>
+Verify that Quarto CLI is installed. Download it from <a href="https://quarto.org/docs/get-started/">quarto.org</a> and restart your R session. Also confirm that <code>report.qmd</code> exists in the application directory.</p>
 <p><strong>Missing values warning on design variables</strong><br>
-The application checks for <code>NA</code> values in your cluster, strata, and weight variables. Use the filtering step (Step 3) to remove incomplete cases before creating the survey design object.</p>
+The application checks for <code>NA</code> values in the selected cluster, strata, and weight variables. Use Step 3 to filter out incomplete cases before creating the survey design object.</p>
 <p><strong>File upload fails</strong><br>
 Files must be under 300 MB and in a supported format. Very large files may take a moment to load. Contact <a href="mailto:sforrest@cdc.gov">sforrest@cdc.gov</a> to request a size limit increase.</p>
-<p><strong>Multivariable analysis warning: “variables do not have identical response options”</strong><br>
-Selected variables for multivariable analysis should share the same response options. Check that the variables are consistent before proceeding.</p>
+<p><strong>Multivariable warning: mixed variable types</strong><br>
+All variables selected for multivariable analysis must be of the same type — either all continuous or all categorical. Review the selected variables and remove any that differ in type.</p>
+<p><strong>Two-way table warning: same variable selected twice</strong><br>
+The outcome and covariate cannot be the same variable for a two-way table or plot. Select a different variable for one of the two.</p>
 <p><strong>No output appears</strong><br>
-Confirm that data is uploaded, an analysis type is selected, and variable(s) have been selected.</p>
+Confirm that a data file is uploaded, an analysis type is selected, and variable(s) have been selected.</p>
+<p><strong>Estimates appear as <code>*</code></strong><br>
+Estimates flagged by the <code>surveytable</code> package as not meeting NCHS standards of reliability have been suppressed. This is expected behavior when the <strong><code>Suppress low-precision estimates?</code></strong> option is enabled.</p>
+<hr>
 </section>
 <section id="additional-information" class="level2">
 <h2 class="anchored" data-anchor-id="additional-information">Additional Information</h2>
@@ -316,49 +498,64 @@ Confirm that data is uploaded, an analysis type is selected, and variable(s) hav
 <p>Cibelli Hibben K, Forrest S, Scanlon P, Smith Z (2026). <em>SurveyLand: An R Shiny application to streamline the analysis and reporting of complex survey data</em>. National Center for Health Statistics. <a href="https://github.com/CDCgov/SurveyLand" class="uri">https://github.com/CDCgov/SurveyLand</a>.</p>
 </blockquote>
 <hr>
-<p>Thank you for using SurveyLand!</p>
+<p>Thank you for using <em>SurveyLand</em>!</p>
 </section>
 
 </main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -366,184 +563,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -551,185 +748,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 
 

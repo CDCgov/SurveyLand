@@ -195,6 +195,11 @@ ui <- fluidPage(
         color: black;
       }
       .well { background-color: #006858; }
+      .toggle-section {
+        border-left: 3px solid rgba(255,255,255,0.3);
+        padding-left: 12px;
+        margin: 4px 0 12px 4px;
+      }
     "))
   ),
   
@@ -211,10 +216,10 @@ ui <- fluidPage(
       "Data Input and Survey Information",
       sidebarLayout(
         sidebarPanel(
-          h4("Step 1: Select a datafile for analysis"),
-          p("Files must be in Excel, CSV, SAS, SPSS, or R format."),
+          h4("Step 1: Select a data file for analysis"),
+          p("Files must be in CSV, Excel, SAS, SPSS, or R format."),
           fileInput(
-            "upload", "Upload datafile",
+            "upload", "Upload data file",
             accept = c(
               ".csv", ".xlsx", ".xls", ".sas7bdat", ".sav",
               ".Rda", ".RData", ".rdata", ".rda", ".Rdata",
@@ -246,7 +251,7 @@ ui <- fluidPage(
               div(
                 class = "custom-box",
                 h4("Step 2: Enter survey metadata information"),
-                p("Enter applicable survey details to format the data source caption and titles for tables and plots."),
+                p("Enter applicable details to format the data source caption and title for tables and plots."),
                 textInput(
                   "data_producer",
                   label = "Enter the data producer",
@@ -278,6 +283,8 @@ ui <- fluidPage(
                   width = "400px"
                 ),
                 actionButton("surv_meta_submit", "Preview data source caption"),
+                br(), 
+                br(),
                 textOutput("surv_meta_summary")
               )
             ),
@@ -289,44 +296,43 @@ ui <- fluidPage(
               div(
                 class = "custom-box",
                 h4("Step 3: Filter the data"),
-                p(
-                  "Note: For analyses that account for complex survey design, use filtering only for data cleaning before creating the survey design object (e.g., removing incomplete cases).",
-                  strong("Do not filter for subgroup analyses, as pre-subsetting can produce incorrect standard errors."),
-                  "Filtering for subgroup analysis is appropriate only for unweighted analyses that do not use survey design information."
-                ),
                 conditionalPanel(
                   "output.file_uploaded == true",
-                  radioButtons(
-                    "filter_dataset", "Filter the data?",
-                    choices = c("Yes", "No"),
-                    inline = TRUE,
-                    selected = character(0)
+                  strong("To filter the data, select the box below"),
+                  p("Note: For complex survey analyses, filtering should be limited to data cleaning, such as removing incomplete cases. Subsetting the data before creating the survey design object can produce incorrect standard errors. Filtering for subgroup analyses should be used ", strong("only"), " in analyses that do not use survey design information, such as unclustered and unweighted analyses."),
+                  checkboxInput("filter_dataset", "Filter the data?", value = FALSE),
+                  conditionalPanel(
+                    "input.filter_dataset == false",
+                    p(em("By default, the complete, unfiltered data file will be used."))
                   ),
                   conditionalPanel(
-                    "input.filter_dataset == 'No'",
+                    "input.filter_dataset == false",
                     verbatimTextOutput("no_filter_message")
                   ),
                   conditionalPanel(
-                    "input.filter_dataset == 'Yes'",
-                    selectizeInput(
-                      "filtered_var",
-                      "Select the variable to filter on",
-                      choices = NULL,
-                      multiple = FALSE,
-                      options = list(
-                        placeholder = "Select one",
-                        onInitialize = I('function() { this.setValue(""); }')
-                      ),
-                      width = "400px"
-                    ),
-                    conditionalPanel(
-                      "input.filtered_var != ''",
+                    "input.filter_dataset == true",
+                    div(
+                      class = "toggle-section",
                       selectizeInput(
-                        "filtered_var_value",
-                        "Specify the value(s) to filter on",
+                        "filtered_var",
+                        "Select the variable to filter on",
                         choices = NULL,
-                        multiple = TRUE,
+                        multiple = FALSE,
+                        options = list(
+                          placeholder = "Select one",
+                          onInitialize = I('function() { this.setValue(""); }')
+                        ),
                         width = "400px"
+                      ),
+                      conditionalPanel(
+                        "input.filtered_var != ''",
+                        selectizeInput(
+                          "filtered_var_value",
+                          "Specify the value(s) to filter on",
+                          choices = NULL,
+                          multiple = TRUE,
+                          width = "400px"
+                        )
                       )
                     ),
                     conditionalPanel(
@@ -338,25 +344,28 @@ ui <- fluidPage(
                       ),
                       conditionalPanel(
                         "input.filter_second_var == true",
-                        selectizeInput(
-                          "filtered_var2",
-                          "Select the second variable to filter on",
-                          choices = NULL,
-                          multiple = FALSE,
-                          options = list(
-                            placeholder = "Select one",
-                            onInitialize = I('function() { this.setValue(""); }')
-                          ),
-                          width = "400px"
-                        ),
-                        conditionalPanel(
-                          "input.filtered_var2 != ''",
+                        div(
+                          class = "toggle-section",
                           selectizeInput(
-                            "filtered_var_value2",
-                            "Specify the value(s) to filter on for the second variable",
+                            "filtered_var2",
+                            "Select the second variable to filter on",
                             choices = NULL,
-                            multiple = TRUE,
+                            multiple = FALSE,
+                            options = list(
+                              placeholder = "Select one",
+                              onInitialize = I('function() { this.setValue(""); }')
+                            ),
                             width = "400px"
+                          ),
+                          conditionalPanel(
+                            "input.filtered_var2 != ''",
+                            selectizeInput(
+                              "filtered_var_value2",
+                              "Specify the value(s) to filter on for the second variable",
+                              choices = NULL,
+                              multiple = TRUE,
+                              width = "400px"
+                            )
                           )
                         )
                       )
@@ -365,6 +374,7 @@ ui <- fluidPage(
                       condition = "(input.filtered_var != '' && input.filtered_var_value.length > 0 && input.filter_second_var == false) || (input.filter_second_var == true && input.filtered_var2 != '' && input.filtered_var_value2.length > 0)",
                       actionButton("filter_submit", "Submit")
                     ),
+                    br(),
                     verbatimTextOutput("filtered_summary")
                   )
                 ),
@@ -382,71 +392,68 @@ ui <- fluidPage(
               div(
                 class = "custom-box",
                 h4("Step 4: Select weighting and survey design approach"),
-                p("Note: To account for complex survey design, the design variables may not have missing values. If missing values are detected for a selected variable, a warning will display."),
                 conditionalPanel(
                   "output.file_uploaded == true",
-                  radioButtons(
-                    "design_select", "Use survey design information?",
-                    choices = c("Yes", "No"),
-                    inline = TRUE,
-                    selected = character(0)
-                  ),
+                  strong("To account for complex survey design, select each feature to include and the corresponding variable(s)"),
+                  p("Note: If missing values are detected for a selected variable, a warning will display."),
+                  
+                  # -- Cluster/PSU toggle --
+                  checkboxInput("use_ids", "Use a cluster / PSU variable?", value = FALSE),
                   conditionalPanel(
-                    "input.design_select == 'No'",
-                    verbatimTextOutput("no_surv_design_message")
-                  ),
-                  conditionalPanel(
-                    "input.design_select == 'Yes'",
-                    radioButtons(
-                      "weighting_select", "Use survey weights?",
-                      choices = c("Yes", "No"),
-                      inline = TRUE,
-                      selected = character(0)
-                    )
-                  ),
-                  conditionalPanel(
-                    "typeof input.weighting_select !== 'undefined' && input.weighting_select !== null && input.weighting_select !== ''",
-                    conditionalPanel(
-                      "input.design_select == 'Yes'",
+                    "input.use_ids == true",
+                    div(
+                      class = "toggle-section",
                       selectizeInput(
                         "dynamic_select_ids",
-                        "Select the cluster/PSU variable for the complex survey design",
-                        choices = NULL,
-                        multiple = FALSE,
-                        options = list(
-                          placeholder = "Select one or leave blank",
-                          onInitialize = I('function() { this.setValue(""); }')
-                        ),
+                        "Select the cluster/PSU variable",
+                        choices = NULL, multiple = FALSE,
+                        options = list(placeholder = "Select one",
+                                       onInitialize = I('function() { this.setValue(""); }')),
                         width = "400px"
-                      ),
-                      selectizeInput(
-                        "dynamic_select_strata",
-                        "Select the strata variable for the complex survey design",
-                        choices = NULL,
-                        multiple = FALSE,
-                        options = list(
-                          placeholder = "Select one or leave blank",
-                          onInitialize = I('function() { this.setValue(""); }')
-                        ),
-                        width = "400px"
-                      ),
-                      conditionalPanel(
-                        "input.weighting_select == 'Yes'",
-                        selectizeInput(
-                          "dynamic_select_weight",
-                          "Select the weighting variable to use in analysis",
-                          choices = NULL,
-                          multiple = FALSE,
-                          options = list(
-                            placeholder = "Select one",
-                            onInitialize = I('function() { this.setValue(""); }')
-                          ),
-                          width = "400px"
-                        )
-                      ),
-                      actionButton("surv_design_submit", "Submit")
+                      )
                     )
                   ),
+                  
+                  # -- Strata toggle --
+                  checkboxInput("use_strata", "Use a strata variable?", value = FALSE),
+                  conditionalPanel(
+                    "input.use_strata == true",
+                    div(
+                      class = "toggle-section",
+                      selectizeInput(
+                        "dynamic_select_strata",
+                        "Select the strata variable",
+                        choices = NULL, multiple = FALSE,
+                        options = list(placeholder = "Select one",
+                                       onInitialize = I('function() { this.setValue(""); }')),
+                        width = "400px"
+                      )
+                    )
+                  ),
+                  
+                  # -- Weights toggle --
+                  checkboxInput("use_weights", "Use survey weights?", value = FALSE),
+                  conditionalPanel(
+                    "input.use_weights == true",
+                    div(
+                      class = "toggle-section",
+                      selectizeInput(
+                        "dynamic_select_weight",
+                        "Select the weighting variable",
+                        choices = NULL, multiple = FALSE,
+                        options = list(placeholder = "Select one",
+                                       onInitialize = I('function() { this.setValue(""); }')),
+                        width = "400px"
+                      )
+                    )
+                  ),
+                  conditionalPanel(
+                    "input.use_ids == false && input.use_strata == false && input.use_weights == false",
+                    p(em("By default, an unweighted, unstratified, and unclustered survey design object will be used."))
+                  ),
+                  actionButton("surv_design_submit", "Submit"),
+                  br(), 
+                  br(),
                   verbatimTextOutput("surv_design_summary")
                 ),
                 conditionalPanel(
@@ -489,9 +496,10 @@ ui <- fluidPage(
                   div(
                     class = "custom-box",
                     h4("Select variable(s) to display the table below"),
-                    # Only show options if a datafile is uploaded and analysis type is selected
+                    # Only show options if a data file is uploaded and analysis type is selected
                     conditionalPanel(
                       condition = "output.file_uploaded == true && input.analysis_type != null && input.analysis_type != ''",
+                      p("Note: Continuous variables will display summary statistics and categorical variables will display percent distributions."),
                       conditionalPanel(
                         condition = "(input.analysis_type == 'One-way (single-variable)' || input.analysis_type == 'Two-way (bi-variable)')",
                         fluidRow(
@@ -546,11 +554,10 @@ ui <- fluidPage(
                             )
                           )
                         ),
-                        p("Note: The covariate variable values will be displayed in rows and the outcome variable values will be displayed in columns. If selecting a numeric variable, select it as the outcome to display summary statistics for each level of the covariate variable. Selecting a categorical variable as the outcome will display the percent distribution.")
+                        p("Note: Covariate variable values will display in rows and outcome variable values will display in columns.")
                       ),
                       conditionalPanel(
                         "input.analysis_type == 'Multivariable'",
-                        br(),
                         fluidRow(
                           column(
                             width = 5,
@@ -576,9 +583,8 @@ ui <- fluidPage(
                             )
                           )
                         ),
-                        p("Note: Mixed variable types are not supported; selected variables must all be continuous or all categorical. Continuous variables will display summary statistics; categorical variables will display percent distributions. Selected categorical variables should have the same response options.")
+                        p("Note: Selected variables must be either all continuous or all categorical; mixed variable types are not supported.")
                       ),
-                      br(),
                       br(),
                       conditionalPanel(
                         "input.analysis_type == 'One-way (single-variable)' && input.dynamic_select_outcome_table != ''",
@@ -587,9 +593,9 @@ ui <- fluidPage(
                           uiOutput("one_way_table")
                         ),
                         br(),
-                        downloadButton("download_one_way_table_image", "Download as image"),
-                        downloadButton("download_one_way_table_word", "Download as Word document"),
-                        downloadButton("download_one_way_table_excel", "Download as Excel file"),
+                        downloadButton("download_one_way_table_image", "Download image"),
+                        downloadButton("download_one_way_table_word", "Download Word document"),
+                        downloadButton("download_one_way_table_excel", "Download Excel file"),
                       ),
                       conditionalPanel(
                         "input.analysis_type == 'Two-way (bi-variable)' && input.dynamic_select_outcome_table != '' && input.dynamic_select_covariate_table != ''",
@@ -598,9 +604,9 @@ ui <- fluidPage(
                           uiOutput("two_way_table")
                         ),
                         br(),
-                        downloadButton("download_two_way_table_image", "Download as image"),
-                        downloadButton("download_two_way_table_word", "Download as Word document"),
-                        downloadButton("download_two_way_table_excel", "Download as Excel file"),
+                        downloadButton("download_two_way_table_image", "Download image"),
+                        downloadButton("download_two_way_table_word", "Download Word document"),
+                        downloadButton("download_two_way_table_excel", "Download Excel file"),
                       )
                     ),
                     conditionalPanel(
@@ -610,9 +616,9 @@ ui <- fluidPage(
                         uiOutput("multivariable_table")
                       ),
                       br(),
-                      downloadButton("download_multivariable_table_image", "Download as image"),
-                      downloadButton("download_multivariable_table_word", "Download as Word document"),
-                      downloadButton("download_multivariable_table_excel", "Download as Excel file")
+                      downloadButton("download_multivariable_table_image", "Download image"),
+                      downloadButton("download_multivariable_table_word", "Download Word document"),
+                      downloadButton("download_multivariable_table_excel", "Download Excel file")
                     ),
                     conditionalPanel(
                       condition = "output.file_uploaded == false || (input.analysis_type == null || input.analysis_type == '')",
@@ -627,45 +633,34 @@ ui <- fluidPage(
                     class = "custom-box",
                     h4("Select data presentation preferences for table generation"),
                     conditionalPanel(
-                      condition = "output.file_uploaded == true && (input.analysis_type != null || input.analysis_type != '')",
+                      condition = "output.file_uploaded == true && (input.analysis_type != null || input.analysis_type != '') &&
+                      ((input.analysis_type == 'One-way (single-variable)' && input.dynamic_select_outcome_table != '') ||
+                      (input.analysis_type == 'Two-way (bi-variable)' && input.dynamic_select_outcome_table != '' && input.dynamic_select_covariate_table != '') ||
+                      (input.analysis_type == 'Multivariable' && input.dynamic_select_multivariable_table != ''))",
                       
                       # ---- One-way / Two-way with categorical outcome ----
                       conditionalPanel(
                         condition = "(input.analysis_type == 'One-way (single-variable)' || input.analysis_type == 'Two-way (bi-variable)') && output.outcome_is_continuous_table == false",
-                        radioButtons(
-                          "nchs_presentation_standard",
-                          label = HTML(paste0(
-                            "Suppress low-precision estimates according to NCHS Data Presentation Standards using the ",
-                            tags$a(
-                              href = "https://cdcgov.github.io/surveytable/",
-                              class = "custom-link",
-                              "surveytable package"
-                            ),
-                            "?"
-                          )),
-                          choices = c("Yes", "No"),
-                          inline = TRUE,
-                          selected = character(0)
+                        h5(strong(HTML(paste0(
+                          "To suppress low-precision estimates according to NCHS data presentation standards using the ",
+                          tags$a(href = "https://cdcgov.github.io/surveytable/", class = "custom-link", "surveytable package"),
+                          ", select the box below")))
                         ),
-                        radioButtons(
-                          "row_n",
-                          "Display row-level totals?",
-                          choices = c("Yes", "No"),
-                          inline = TRUE,
-                          selected = character(0)
-                        )
-                      ),
+                        checkboxInput(
+                          "nchs_presentation_standard",
+                          width = "800px",
+                          label = "Suppress low-precision estimates?",
+                          value = FALSE
+                        ),
+                        h5(strong("To display row-level totals, select the box below")),
+                        checkboxInput("row_n", "Display Ns?", value = FALSE)
+                        ),
                       
                       # ---- One-way / Two-way with continuous outcome ----
                       conditionalPanel(
                         condition = "(input.analysis_type == 'One-way (single-variable)' || input.analysis_type == 'Two-way (bi-variable)') && output.outcome_is_continuous_table == true",
-                        radioButtons(
-                          "percent_known",
-                          "Display percent known values?",
-                          choices = c("Yes", "No"),
-                          inline = TRUE,
-                          selected = character(0)
-                        )
+                        h5(strong("To display the percent of known values, select the box below")),
+                        checkboxInput("percent_known", "Display percent known?", value = FALSE)
                       ),
                       
                       # ---- Multivariable ----
@@ -674,32 +669,22 @@ ui <- fluidPage(
                         # Suppression option — only for categorical multivariable
                         conditionalPanel(
                           condition = "output.multivariable_is_continuous == false && output.multivariable_is_mixed == false",
-                          radioButtons(
+                          h5(strong(HTML(paste0(
+                            "To suppress low-precision estimates according to NCHS data presentation standards using the ",
+                            tags$a(href = "https://cdcgov.github.io/surveytable/", class = "custom-link", "surveytable package"),
+                            ", select the box below")))
+                            ),
+                          checkboxInput(
                             "nchs_presentation_standard",
-                            label = HTML(paste0(
-                              "Suppress low-precision estimates according to NCHS Data Presentation Standards using the ",
-                              tags$a(
-                                href = "https://cdcgov.github.io/surveytable/",
-                                class = "custom-link",
-                                "surveytable package"
-                              ),
-                              "?"
-                            )),
-                            choices = c("Yes", "No"),
-                            inline = TRUE,
-                            selected = character(0)
+                            width = "800px",
+                            label = "Suppress low-precision estimates?",
+                            value = FALSE
                           )
                         ),
                         # Percent-known option — only for continuous multivariable
                         conditionalPanel(
                           condition = "output.multivariable_is_continuous == true",
-                          radioButtons(
-                            "percent_known_multivariable",
-                            "Display percent known values?",
-                            choices = c("Yes", "No"),
-                            inline = TRUE,
-                            selected = character(0)
-                          )
+                          checkboxInput("percent_known_multivariable", "Display percent known values?", value = FALSE)
                         ),
                         # Mixed-type warning message in the options panel
                         conditionalPanel(
@@ -709,8 +694,11 @@ ui <- fluidPage(
                       )
                     ),
                     conditionalPanel(
-                      condition = "output.file_uploaded == false || (input.analysis_type == null || input.analysis_type == '')",
-                      h5(strong("Upload a data file and select analytical approach to enable table options."))
+                      condition = "output.file_uploaded == false || (input.analysis_type == null || input.analysis_type == '') ||
+                      (input.analysis_type == 'One-way (single-variable)' && (input.dynamic_select_outcome_table == '' || input.dynamic_select_outcome_table == null)) ||
+                      (input.analysis_type == 'Two-way (bi-variable)' && ((input.dynamic_select_outcome_table == '' || input.dynamic_select_outcome_table == null) || (input.dynamic_select_covariate_table == '' || input.dynamic_select_covariate_table == null))) ||
+                      (input.analysis_type == 'Multivariable' && (input.dynamic_select_multivariable_table == '' || input.dynamic_select_multivariable_table == null))",
+                      h5(strong("Upload a data file, select analytical approach, and select variable(s) to enable table options."))
                     )
                   )
                 )
@@ -781,11 +769,11 @@ ui <- fluidPage(
                               value = ""
                             )
                           )
-                        )
+                        ),
+                        p("Note: Covariate variable values will display as groups along the x-axis and outcome variable values will display as bar fill colors.")
                       ),
                       conditionalPanel(
                         "input.analysis_type == 'Multivariable'",
-                        br(),
                         fluidRow(
                           column(
                             width = 5,
@@ -811,7 +799,6 @@ ui <- fluidPage(
                             )
                           )
                         ),
-                        p("Note: Selected variables should have identical response options.")
                       ),
                       br(),
                       conditionalPanel(
@@ -821,7 +808,7 @@ ui <- fluidPage(
                           plotOutput("one_way_plot", width = 800, height = 600)
                         ),
                         br(),
-                        downloadButton("download_one_way_plot", "Download as image"),
+                        downloadButton("download_one_way_plot", "Download image"),
                         actionButton("add_one_way_plot_to_report", "Add to report")
                       ),
                       conditionalPanel(
@@ -831,7 +818,7 @@ ui <- fluidPage(
                           plotOutput("two_way_plot", width = 800, height = 600)
                         ),
                         br(),
-                        downloadButton("download_two_way_plot", "Download as image"),
+                        downloadButton("download_two_way_plot", "Download image"),
                         actionButton("add_two_way_plot_to_report", "Add to report")
                       ),
                       conditionalPanel(
@@ -841,7 +828,7 @@ ui <- fluidPage(
                           plotOutput("multivariable_plot", width = 800, height = 600)
                         ),
                         br(),
-                        downloadButton("download_multivariable_plot", "Download as image"),
+                        downloadButton("download_multivariable_plot", "Download image"),
                         actionButton("add_multivariable_plot_to_report", "Add to report")
                       )
                     ),
@@ -856,59 +843,50 @@ ui <- fluidPage(
                   br(),
                   div(
                     class = "custom-box",
-                    h4("Select preferences for plot generation"),
+                    h4("Select data presentation preferences for plot generation"),
                     conditionalPanel(
-                      condition = "output.file_uploaded == true && (input.analysis_type != null || input.analysis_type != '')",
-                      checkboxInput("options_checkbox", "Do you want to customize the plot?", value = FALSE),
+                      condition = "output.file_uploaded == true && (input.analysis_type != null || input.analysis_type != '') &&
+                      ((input.analysis_type == 'One-way (single-variable)' && input.dynamic_select_outcome_plot != '') ||
+                      (input.analysis_type == 'Two-way (bi-variable)' && input.dynamic_select_outcome_plot != '' && input.dynamic_select_covariate_plot != '') ||
+                      (input.analysis_type == 'Multivariable' && input.dynamic_select_multivariable_plot != ''))",
                       conditionalPanel(
-                        condition = "input.options_checkbox == true && input.analysis_type == 'Multivariable'",
-                        radioButtons(
-                          "plot_axis_flip",
-                          "Flip the x and y axes?",
-                          choices = c("Yes", "No"),
-                          inline = TRUE,
-                          selected = character(0)
-                        ),
+                        condition = "input.analysis_type == 'Multivariable'",
+                        h5(strong("To flip the x and y-axis, select the box below")),
+                        checkboxInput("plot_axis_flip", "Flip axes?", value = FALSE),
                         radioButtons(
                           "plot_bar_position",
-                          "Bar position?",
-                          choices = c("Stacked", "Side by side (dodged)"),
+                          "Select a bar position",
+                          choices = c("Stacked", "Side-by-side (dodged)"),
                           inline = TRUE,
-                          selected = character(0)
+                          selected = "Stacked"
                         )
                       ),
+                      h5(strong("To display value labels, select the box below")),
+                      checkboxInput("value_labels", "Display value labels?", value = FALSE),
+                      selectInput(
+                        "plot_theme",
+                        "Select a ggplot or NCHS theme",
+                        choices = theme_list,
+                        selected = NULL,
+                        width = "400px"
+                      ),
+                      h5(strong("To overwrite plot labels, enter custom text below")),
+                      textInput("plot_title",    "Enter a title",       value = "", width = "400px"),
+                      textInput("plot_subtitle", "Enter a subtitle",    value = "", width = "400px"),
+                      textInput("plot_xlab",     "Enter x-axis label",  value = "", width = "400px"),
+                      textInput("plot_ylab",     "Enter y-axis label",  value = "", width = "400px"),
+                      textInput("plot_caption",  "Enter a caption", value = "", width = "400px"),
                       conditionalPanel(
-                        condition = "input.options_checkbox == true",
-                        radioButtons(
-                          "value_labels",
-                          "Display value labels?",
-                          choices = c("Yes", "No"),
-                          inline = TRUE,
-                          selected = character(0)
-                        ),
-                        selectInput(
-                          "plot_theme",
-                          "Select a ggplot or NCHS theme",
-                          choices = theme_list,
-                          selected = NULL,
-                          width = "400px"
-                        ),
-                        h5(strong("Overwrite plot labels:")),
-                        textInput("plot_title", "Enter a title", value = "", width = "400px"),
-                        textInput("plot_subtitle", "Enter a subtitle", value = "", width = "400px"),
-                        textInput("plot_xlab", "Enter x-axis label", value = "", width = "400px"),
-                        textInput("plot_ylab", "Enter y-axis label", value = "", width = "400px"),
-                        textInput("plot_caption", "Enter a caption (default uses details entered in the survey metadata tab)", value = "", width = "400px"),
-                        conditionalPanel(
-                          condition = "input.analysis_type == 'Two-way (bi-variable)' || input.analysis_type == 'Multivariable'",
-                          textInput("plot_legend_title", "Enter legend label", value = "", width = "400px")
-                        ),
-                        textInput("plot_alttext", "Enter alt text", value = "", width = "400px")
+                        condition = "input.analysis_type == 'Two-way (bi-variable)' || input.analysis_type == 'Multivariable'",
+                        textInput("plot_legend_title", "Enter legend label", value = "", width = "400px")
                       )
                     ),
                     conditionalPanel(
-                      condition = "output.file_uploaded == false || (input.analysis_type == null || input.analysis_type == '')",
-                      h5(strong("Upload a data file and select analytical approach to enable plotting options."))
+                      condition = "output.file_uploaded == false || (input.analysis_type == null || input.analysis_type == '') ||
+                      (input.analysis_type == 'One-way (single-variable)' && (input.dynamic_select_outcome_plot == '' || input.dynamic_select_outcome_plot == null)) ||
+                      (input.analysis_type == 'Two-way (bi-variable)' && ((input.dynamic_select_outcome_plot == '' || input.dynamic_select_outcome_plot == null) || (input.dynamic_select_covariate_plot == '' || input.dynamic_select_covariate_plot == null))) ||
+                      (input.analysis_type == 'Multivariable' && (input.dynamic_select_multivariable_plot == '' || input.dynamic_select_multivariable_plot == null))",
+                      h5(strong("Upload a data file, select analytical approach, and select variable(s) to enable plot options."))
                     )
                   )
                 )
@@ -989,8 +967,7 @@ server <- function(input, output, session) {
   # ---- Data Manipulation ----
   filtered_data <- reactive({
     req(data())
-    filter_choice <- ifelse(is.null(input$filter_dataset) || input$filter_dataset == "", "No", input$filter_dataset)
-    if (filter_choice == "Yes") {
+    if (isTRUE(input$filter_dataset)) {
       req(input$filtered_var, input$filtered_var_value)
       filtered <- data() %>%
         filter(
@@ -1029,38 +1006,49 @@ server <- function(input, output, session) {
   })
   
   # ---- Weighting and Design ----
+  ids_active <- reactive({
+    isTRUE(input$use_ids) &&
+      !is.null(input$dynamic_select_ids) &&
+      nzchar(input$dynamic_select_ids)
+  })
+  
+  strata_active <- reactive({
+    isTRUE(input$use_strata) &&
+      !is.null(input$dynamic_select_strata) &&
+      nzchar(input$dynamic_select_strata)
+  })
+  
+  weights_active <- reactive({
+    isTRUE(input$use_weights) &&
+      !is.null(input$dynamic_select_weight) &&
+      nzchar(input$dynamic_select_weight)
+  })
+  
   valid_id <- reactive({
-    if (is.null(input$dynamic_select_ids) || input$dynamic_select_ids == "") {
-      return(TRUE)
-    }
+    if (!ids_active()) return(TRUE)
     has_missing <- sum(is.na(filtered_data()[[input$dynamic_select_ids]])) > 0
     shinyFeedback::feedbackWarning(
-      "dynamic_select_ids",
-      has_missing,
+      "dynamic_select_ids", has_missing,
       "Missing values detected for selected cluster/PSU variable. Please filter them out in Step 3."
     )
     !has_missing
   })
   
   valid_strata <- reactive({
-    if (is.null(input$dynamic_select_strata) || input$dynamic_select_strata == "") {
-      return(TRUE)
-    }
+    if (!strata_active()) return(TRUE)
     has_missing <- sum(is.na(filtered_data()[[input$dynamic_select_strata]])) > 0
     shinyFeedback::feedbackWarning(
-      "dynamic_select_strata",
-      has_missing,
+      "dynamic_select_strata", has_missing,
       "Missing values detected for selected strata variable. Please filter them out in Step 3."
     )
     !has_missing
   })
   
   valid_weight <- reactive({
-    req(input$dynamic_select_weight)
+    if (!weights_active()) return(TRUE)
     has_missing <- sum(is.na(filtered_data()[[input$dynamic_select_weight]])) > 0
     shinyFeedback::feedbackWarning(
-      "dynamic_select_weight",
-      has_missing,
+      "dynamic_select_weight", has_missing,
       "Missing values detected for selected weight variable. Please filter them out in Step 3."
     )
     !has_missing
@@ -1070,37 +1058,20 @@ server <- function(input, output, session) {
     req(filtered_data())
     options(survey.lonely.psu = "adjust")
     
-    design_choice <- ifelse(is.null(input$design_select) || input$design_select == "", "No", input$design_select)
-    weighting_choice <- ifelse(is.null(input$weighting_select) || input$weighting_select == "", "No", input$weighting_select)
-    
-    ids_formula <- ~1
-    strata_formula <- NULL
+    ids_formula     <- ~1
+    strata_formula  <- NULL
     weights_formula <- ~1
     
-    if (design_choice == "Yes") {
-      if (!is.null(input$dynamic_select_ids) &&
-          input$dynamic_select_ids != "" &&
-          valid_id()) {
-        ids_formula <- as.formula(paste("~", input$dynamic_select_ids))
-      }
-      
-      if (!is.null(input$dynamic_select_strata) &&
-          input$dynamic_select_strata != "" &&
-          valid_strata()) {
-        strata_formula <- as.formula(paste("~", input$dynamic_select_strata))
-      }
-    }
-    
-    if (weighting_choice == "Yes" && valid_weight()) {
-      weights_formula <- as.formula(paste("~", input$dynamic_select_weight))
-    }
+    if (ids_active()     && valid_id())     ids_formula     <- as.formula(paste("~", input$dynamic_select_ids))
+    if (strata_active()  && valid_strata()) strata_formula  <- as.formula(paste("~", input$dynamic_select_strata))
+    if (weights_active() && valid_weight()) weights_formula <- as.formula(paste("~", input$dynamic_select_weight))
     
     svydesign(
-      ids = ids_formula,
-      strata = strata_formula,
-      data = filtered_data(),
+      ids     = ids_formula,
+      strata  = strata_formula,
+      data    = filtered_data(),
       weights = weights_formula,
-      nest = TRUE
+      nest    = TRUE
     )
   })
   
@@ -1110,44 +1081,34 @@ server <- function(input, output, session) {
   })
   
   surv_design_summary <- reactive({
-    req(input$design_select, input$weighting_select)
     
-    survey_design_object <- tryCatch({
-      data_survey()
-    }, error = function(e) NULL)
+    if (ids_active()     && !valid_id())     return("The selected cluster/PSU variable has missing values. Please filter them out in Step 3.")
+    if (strata_active()  && !valid_strata()) return("The selected strata variable has missing values. Please filter them out in Step 3.")
+    if (weights_active() && !valid_weight()) return("The selected weight variable has missing values. Please filter them out in Step 3.")
     
+    survey_design_object <- tryCatch({ data_survey() }, error = function(e) NULL)
     if (is.null(survey_design_object)) {
-      return("Failed to create the survey design object. Please check selections.")
-    }
-    
-    ids_used <- !is.null(input$dynamic_select_ids) && input$dynamic_select_ids != ""
-    strata_used <- !is.null(input$dynamic_select_strata) && input$dynamic_select_strata != ""
-    
-    if (ids_used && !valid_id()) {
-      return("The selected cluster/PSU variable has missing values. Please filter them out in Step 3.")
-    }
-    
-    if (strata_used && !valid_strata()) {
-      return("The selected strata variable has missing values. Please filter them out in Step 3.")
-    }
-    
-    if (input$weighting_select == "Yes") {
-      req(input$dynamic_select_weight, valid_weight())
+      return("Failed to create the survey design object. Please check your selections.")
     }
     
     paste(
-      ifelse(
-        input$weighting_select == "Yes",
-        "Analysis will be weighted and design information will be used.",
-        "Analysis will be unweighted, but design information will be used."
+      paste0(
+        "Analysis will be ",
+        ifelse(ids_active(), "clustered", "unclustered"),
+        ", ",
+        ifelse(strata_active(), "stratified", "unstratified"),
+        ", and ",
+        ifelse(weights_active(), "weighted", "unweighted"),
+        "."
       ),
       "\n\nA survey design object has been created using the survey package with the following specifications:",
-      "\nids =", ifelse(ids_used, input$dynamic_select_ids, "~1 (no clustering specified)"),
-      "\nstrata =", ifelse(strata_used, input$dynamic_select_strata, "NULL (no strata specified)"),
-      "\nweights =", ifelse(input$weighting_select == "Yes", input$dynamic_select_weight, "~1 (unweighted analysis)"),
-      "\nnest = TRUE (nested design)"
+      "\nids     =", ifelse(ids_active(),     input$dynamic_select_ids,    "~1 (unclustered analysis)"),
+      "\nstrata  =", ifelse(strata_active(),  input$dynamic_select_strata, "NULL (unstratified analysis)"),
+      "\nweights =", ifelse(weights_active(), input$dynamic_select_weight, "~1 (unweighted analysis)"),
+      "\nnest    = TRUE"
     )
-  })
+    
+  }) %>% bindEvent(input$surv_design_submit)
   
   # ---- Data Analysis ----
   codebook <- reactive({
@@ -1172,21 +1133,6 @@ server <- function(input, output, session) {
       identical(input$dynamic_select_outcome_table, input$dynamic_select_covariate_table)
   })
   
-  identical_multivariable_table_responses <- reactive({
-    req(input$dynamic_select_multivariable_table)
-    vars <- input$dynamic_select_multivariable_table
-    opts <- get_response_options(filtered_data(), vars)
-    # Compare all to the first
-    all(sapply(opts, function(x) identical(x, opts[[1]])))
-  })
-  
-  identical_multivariable_plot_responses <- reactive({
-    req(input$dynamic_select_multivariable_plot)
-    vars <- input$dynamic_select_multivariable_plot
-    opts <- get_response_options(filtered_data(), vars)
-    all(sapply(opts, function(x) identical(x, opts[[1]])))
-  })
-  
   multivariable_var_type <- reactive({
     req(input$dynamic_select_multivariable_table, filtered_data())
     vars  <- input$dynamic_select_multivariable_table
@@ -1197,23 +1143,19 @@ server <- function(input, output, session) {
   })
   
   percent_known_multivariable <- reactive({
-    if (is.null(input$percent_known_multivariable)) return(FALSE)
-    input$percent_known_multivariable == "Yes"
+    isTRUE(input$percent_known_multivariable)
   })
   
   nchs_presentation_standard <- reactive({
-    if (is.null(input$nchs_presentation_standard)) return(FALSE)
-    input$nchs_presentation_standard == "Yes"
+    isTRUE(input$nchs_presentation_standard)
   })
   
   row_n <- reactive({
-    if (is.null(input$row_n)) return(FALSE)
-    input$row_n == "Yes"
+    isTRUE(input$row_n)
   })
   
   percent_known <- reactive({
-    if (is.null(input$percent_known)) return(FALSE)
-    input$percent_known == "Yes"
+    isTRUE(input$percent_known)
   })
   
   table_title <- reactive({
@@ -1364,6 +1306,10 @@ server <- function(input, output, session) {
     table_data <- processed_table_one_way()$table
     # ---- Continuous path ----
     if (outcome_is_continuous_table()) {
+      numeric_cols <- names(table_data)[sapply(table_data, is.numeric)]
+      table_data[numeric_cols] <- lapply(table_data[numeric_cols], function(x) {
+        sprintf("%.1f", x)
+      })
       ft <- flextable(table_data) %>%
         set_table_properties(width = 0.5, layout = "autofit") %>%
         add_footer_lines(processed_table_one_way()$footnote) %>%
@@ -1576,6 +1522,10 @@ server <- function(input, output, session) {
     table_data <- processed_table_two_way()$table
     # ---- Continuous path ----
     if (outcome_is_continuous_table()) {
+      numeric_cols <- names(table_data)[sapply(table_data, is.numeric)]
+      table_data[numeric_cols] <- lapply(table_data[numeric_cols], function(x) {
+        sprintf("%.1f", x)
+      })
       ft <- flextable(table_data) %>%
         set_table_properties(width = 0.75, layout = "autofit") %>%
         add_footer_lines(processed_table_two_way()$footnote) %>%
@@ -1777,6 +1727,10 @@ server <- function(input, output, session) {
     
     # ---- Continuous path ----
     if (isTRUE(result$is_continuous)) {
+      numeric_cols <- names(table_data)[sapply(table_data, is.numeric)]
+      table_data[numeric_cols] <- lapply(table_data[numeric_cols], function(x) {
+        sprintf("%.1f", x)
+      })
       ft <- flextable(table_data) %>%
         set_table_properties(width = 0.75, layout = "autofit") %>%
         add_footer_lines(result$footnote) %>%
@@ -1808,7 +1762,7 @@ server <- function(input, output, session) {
   
   # ---- Plot Generation ----
   plot_title <- reactive({
-    if (isTRUE(input$options_checkbox) && input$plot_title != "") {
+    if (input$plot_title != "") {
       input$plot_title
     } else if (input$analysis_type %in% c("One-way (single-variable)", "Two-way (bi-variable)")) {
       paste0(
@@ -1831,7 +1785,7 @@ server <- function(input, output, session) {
   })
   
   plot_subtitle <- reactive({
-    if (isTRUE(input$options_checkbox) && input$plot_subtitle != "") {
+    if (input$plot_subtitle != "") {
       input$plot_subtitle
     } else {
       NULL
@@ -1841,19 +1795,19 @@ server <- function(input, output, session) {
   plot_xlab <- reactive({
     req(input$analysis_type)
     if (input$analysis_type == "One-way (single-variable)") {
-      if (isTRUE(input$options_checkbox) && input$plot_xlab != "") {
+      if (input$plot_xlab != "") {
         input$plot_xlab
       } else {
         input$dynamic_select_outcome_plot
       }
     } else if (input$analysis_type == "Two-way (bi-variable)") {
-      if (isTRUE(input$options_checkbox) && input$plot_xlab != "") {
+      if (input$plot_xlab != "") {
         input$plot_xlab
       } else {
         input$dynamic_select_covariate_plot
       }
     } else if (input$analysis_type == "Multivariable") {
-      if (isTRUE(input$options_checkbox) && input$plot_xlab != "") {
+      if (input$plot_xlab != "") {
         input$plot_xlab
       }
     } else {
@@ -1862,7 +1816,7 @@ server <- function(input, output, session) {
   })
   
   plot_ylab <- reactive({
-    if (isTRUE(input$options_checkbox) && input$plot_ylab != "") {
+    if (input$plot_ylab != "") {
       input$plot_ylab
     } else {
       "Percent"
@@ -1870,7 +1824,7 @@ server <- function(input, output, session) {
   })
   
   plot_caption <- reactive({
-    if (isTRUE(input$options_checkbox) && input$plot_caption != "") {
+    if (input$plot_caption != "") {
       input$plot_caption
     } else {
       caption()
@@ -1879,27 +1833,12 @@ server <- function(input, output, session) {
   
   plot_legend_title <- reactive({
     req(input$analysis_type)
-    if (isTRUE(input$options_checkbox) && input$plot_legend_title != "") {
+    if (input$plot_legend_title != "") {
       input$plot_legend_title
     } else if (input$analysis_type %in% c("One-way (single-variable)", "Two-way (bi-variable)")) {
       input$dynamic_select_outcome_plot
     } else if (input$analysis_type == "Multivariable") {
       "Response"
-    } else {
-      NULL
-    }
-  })
-  
-  plot_alttext <- reactive({
-    req(input$analysis_type)
-    if (isTRUE(input$options_checkbox) && input$plot_alttext != "") {
-      input$plot_alttext
-    } else if (input$analysis_type == "Two-way (bi-variable)") {
-      paste0("A bar chart showing the percent of each value of ", input$dynamic_select_outcome_plot, " by each value of ", input$dynamic_select_covariate_plot)
-    } else if (input$analysis_type == "One-way (single-variable)") {
-      paste0("A bar chart showing the percent of each value of ", input$dynamic_select_outcome_plot)
-    } else if (input$analysis_type == "Multivariable") {
-      paste0("A bar chart showing the percent of each value of ", input$dynamic_select_multivariable_plot)
     } else {
       NULL
     }
@@ -1920,7 +1859,7 @@ server <- function(input, output, session) {
           geom_bar(stat = "identity")
       } +
       {
-        if (!is.null(input$value_labels) && input$value_labels == "Yes") {
+        if (isTRUE(input$value_labels)) {
           geom_text(aes(label = sprintf("%.1f", mean * 100)), vjust = -0.5, size = 3)
         } else {
           NULL
@@ -1931,8 +1870,7 @@ server <- function(input, output, session) {
       labs(
         title = plot_title(),
         caption = plot_caption(),
-        subtitle = plot_subtitle(),
-        alt = plot_alttext()
+        subtitle = plot_subtitle()
       ) +
       {
         if (input$plot_theme == "nchs_theme")
@@ -1956,7 +1894,7 @@ server <- function(input, output, session) {
       ggplot(aes(x = covariate_lbl, y = mean, fill = outcome_lbl)) +
       geom_bar(stat = "identity", position = position_dodge()) +
       {
-        if (!is.null(input$value_labels) && input$value_labels == "Yes") {
+        if (isTRUE(input$value_labels)) {
           geom_text(
             aes(label = sprintf("%.1f", mean * 100), group = outcome_lbl),
             position = position_dodge(width = 0.9),
@@ -1973,7 +1911,6 @@ server <- function(input, output, session) {
         title = plot_title(),
         caption = plot_caption(),
         subtitle = plot_subtitle(),
-        alt = plot_alttext(),
         fill = plot_legend_title()
       ) +
       {
@@ -2019,17 +1956,17 @@ server <- function(input, output, session) {
       }) %>%
       ggplot(aes(x = variable, y = mean, fill = response)) +
       {
-        if (!is.null(input$plot_bar_position) && input$plot_bar_position == "Side by side (dodged)")
+        if (!is.null(input$plot_bar_position) && input$plot_bar_position == "Side-by-side (dodged)")
           geom_bar(stat = "identity", position = "dodge")
         else
           geom_bar(stat = "identity", position = "stack")
       } +
       # Data labels
       {
-        if (!is.null(input$value_labels) && input$value_labels == "Yes") {
-          if (!is.null(input$plot_bar_position) && input$plot_bar_position == "Side by side (dodged)") {
+        if (isTRUE(input$value_labels)) {
+          if (!is.null(input$plot_bar_position) && input$plot_bar_position == "Side-by-side (dodged)") {
             # Check if axes are flipped
-            if (!is.null(input$plot_axis_flip) && input$plot_axis_flip == "Yes") {
+            if (isTRUE(input$plot_axis_flip)) {
               geom_text(
                 aes(label = sprintf("%.1f", mean * 100)),
                 position = position_dodge(width = 0.9),
@@ -2061,11 +1998,10 @@ server <- function(input, output, session) {
         title = plot_title(),
         caption = plot_caption(),
         subtitle = plot_subtitle(),
-        alt = plot_alttext(),
         fill = plot_legend_title()
       ) +
       {
-        if (!is.null(input$plot_axis_flip) && input$plot_axis_flip == "Yes")
+        if (isTRUE(input$plot_axis_flip))
           coord_flip()
         else
           NULL
@@ -2215,16 +2151,11 @@ server <- function(input, output, session) {
     req(input$dynamic_select_multivariable_table)
     var_type <- multivariable_var_type()
     mixed_var_type <- var_type == "mixed"
-    response_mismatch <- !identical_multivariable_table_responses() && var_type == "categorical"
     
     shinyFeedback::feedbackWarning(
       inputId = "dynamic_select_multivariable_table",
-      show    = mixed_var_type || response_mismatch,
-      text    = if (mixed_var_type)
-        "Selected must be either all be continuous or all categorical; mixed types are not supported."
-      else if (response_mismatch)
-        "All selected variables do not have identical response options."
-      else ""
+      show    = mixed_var_type,
+      text    = "Selected variables must all be continuous or all categorical; mixed types are not supported."
     )
   })
   
@@ -2252,17 +2183,6 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "dynamic_select_outcome_plot", choices = variable_name_list())
     updateSelectizeInput(session, "dynamic_select_covariate_plot", choices = variable_name_list())
     updateSelectizeInput(session, "dynamic_select_multivariable_plot", choices = variable_name_list())
-  })
-  
-  # Plot selector feedback
-  observe({
-    req(input$dynamic_select_multivariable_plot)
-    show_error <- !identical_multivariable_plot_responses()
-    shinyFeedback::feedbackWarning(
-      inputId = "dynamic_select_multivariable_plot",
-      show = show_error,
-      text = "All selected variables do not have identical response options."
-    )
   })
   
   # ---- Report Generation Observers ----
