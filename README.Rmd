@@ -164,7 +164,7 @@ The files below are required for full functionality:
 **Acknowledgements**
 
 - CDC Data Science Upskilling (DSU) Program
-- Alex Strashny (author of [`surveytable`](https://cdcgov.github.io/surveytable/))
+- Alex Strashny, CDC/NCHS/DHCS/OD (author of [`surveytable`](https://cdcgov.github.io/surveytable/))
 
 ## Citation
 	

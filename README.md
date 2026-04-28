@@ -195,7 +195,7 @@ and non-probability samples.
 **Acknowledgements**
 
 - CDC Data Science Upskilling (DSU) Program
-- Alex Strashny (author of
+- Alex Strashny, CDC/NCHS/DHCS/OD (author of
   [`surveytable`](https://cdcgov.github.io/surveytable/))
 
 ## Citation
